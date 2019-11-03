@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>手机号</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<style type="text/css">
+			.logo-icon{width: 100px;margin:70px auto 30px auto;border-radius: 50%;}
+			.text{font-size: 14px;color: #666666;}
+			.custorm-form {margin:20px auto}
+			.custorm-form.mui-input-group:before,.custorm-form.mui-input-group:after{height: 0;}
+			.custorm-form .mui-input-row{height: 50px;line-height: 50px;font-size: 1;}
+			.custorm-form .mui-input-row label{padding:16px 15px;}
+			.custorm-form .codebtn{position: absolute;right: 10px;top:5px;width: auto;padding:8px 15px}
+			.three-row .mui-input-clear{padding-right: 90px;}
+			.three-row .mui-input-clear~.mui-icon-clear{right: 90px;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title title-color">手机号</h1>
+		</header>
+		<div class="mui-content" id="setphone">
+			<div class="mui-text-center">
+			<img src="image/logo1.png" class="logo-icon">
+				<div class="text">
+					更改后个人信息不变，下次可以用使用新手机号登录
+				</div>
+			</div>
+			<form class="mui-input-group custorm-form" id="form">
+				<div class="mui-input-row">
+					<label>新手机号</label>
+					<input type="number" id="phone" class="mui-input-clear" placeholder="请输入新手机号码">
+				</div>
+				<div class="mui-input-row three-row">
+					<label>验证码</label>
+					<input type="number" id="code" class="mui-input-clear" placeholder="请输入验证码">
+					<button type="button" id="sendcode" class="mui-btn codebtn mui-btn-mini">获取</button>
+				</div>
+				
+			</form>
+			<div class="mui-content-padded">
+			<button type="button" class="mui-btn mui-btn-green mui-btn-block" id="submitbtn">确定</button>
+				
+			</div>
+		</div>
+
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function() {
+				// 用户退出
+				var submitbtn = document.getElementById("submitbtn");
+				var phone = document.getElementById("phone");
+				var code = document.getElementById("code");
+				submitbtn.addEventListener("tap", function() {
+					document.getElementById('form')
+					mui.toast('提交数据',phone.value+code.value)
+
+				});
+				//发送验证吗
+				document.getElementById('sendcode').addEventListener("tap", function() {
+					mui.toast('发送验证码成功！',phone.value+code.value)
+				});
+			});
+		</script>
+	</body>
+
+</html>

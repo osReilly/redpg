@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<style type="text/css">
+			.refreshContainer.mui-content{top:80px;background-color:#fff}
+			.refreshContainer .mui-table-view:after{height: 0;}
+			.cdata{text-align: center;}
+			.cdata .text{font-size: 0.75rem;color: #999999;margin-top: 1.25rem;}
+			.height-center{line-height: 42px;height: 42px;}
+			.mui-table-view-chevron .mui-table-view-cell:last-child::after{height: 0;}
+			.mui-table-view-chevron .mui-table-view-cell.no-paddingLR{padding:40px 0}
+			.mui-table-view-chevron .mui-table-view-cell.no-paddingLR.mui-active{background: #FFFFFF;}
+		</style>
+	</head>
+
+	<body>
+  <ul class="mui-table-view">
+  	<li class="mui-table-view-cell mui-media">
+  		<a href="javascript:;">
+  			<img class="mui-media-object mui-pull-left" src="image/4.png">
+  			<div class="mui-media-body height-center">
+  					官方通知
+  			</div>
+  		</a>
+  	</li>
+  </ul>
+		
+		<!--下拉刷新容器-->
+		<div id="refreshContainer" class="refreshContainer mui-content mui-scroll-wrapper">
+		  <div class="mui-scroll">
+			<!--数据列表-->
+			<ul class="mui-table-view mui-table-view-chevron">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						Item 1
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						 Item 2
+					</a>
+				</li>
+				<li class="mui-table-view-cell no-paddingLR">
+					<div class="cdata">
+						<img src="image/1.png" >
+						<div class="text">-暂无相关数据-</div>
+					</div>
+				</li>
+				
+			</ul>
+		  </div>
+		</div>	
+		
+
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+	</body>
+
+</html>
