@@ -8,6 +8,22 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="fonts/iconfont.css" />
 		<link rel="stylesheet" href="css/header.css" />
+		<style type="text/css">
+			#topPopover {
+				position: fixed;
+				top: 16px;
+				right: 6px;
+			}
+
+			#topPopover .mui-popover-arrow {
+				left: auto;
+				right: 6px;
+			}
+
+			.mui-popover {
+				height: 100px;
+			}
+		</style>
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
 
@@ -20,6 +36,7 @@
 	<body>
 
 		<header class="mui-bar mui-bar-nav title">
+			<span id="more" class="mui-icon mui-icon-more mui-pull-right" style="color: #fff;"></span>
 			<h1 class="mui-title title-color" id="muxin_title"><b>群组</b></h1>
 		</header>
 
@@ -45,19 +62,23 @@
 		<script type="text/javascript">
 			var muxinArray = [{
 					pageId: "imooc-chatlist.html",
-					pageUrl: "imooc-chatlist.html"
+					pageUrl: "imooc-chatlist.html",
+					title: "群组"
 				},
 				{
 					pageId: "imooc-description.html",
-					pageUrl: "imooc-description.html"
+					pageUrl: "imooc-description.html",
+					title: "说明"
 				},
 				{
 					pageId: "immoc-message.html",
-					pageUrl: "immoc-message.html"
+					pageUrl: "immoc-message.html",
+					title: "消息"
 				},
 				{
 					pageId: "imooc-me.html",
-					pageUrl: "imooc-me.html"
+					pageUrl: "imooc-me.html",
+					title: "我"
 				}
 			];
 
@@ -78,9 +99,9 @@
 
 				// 获取当前的webview对象
 				var indexWebview = plus.webview.currentWebview()
-
 				// 向当前的主页webview追加子页的4张webview对象
 				for (var i = 0; i < muxinArray.length; i++) {
+
 					var muxinPage = plus.webview.create(muxinArray[i].pageUrl,
 						muxinArray[i].pageId,
 						muxinStyle);
@@ -90,12 +111,33 @@
 					indexWebview.append(muxinPage);
 				}
 				plus.webview.show(muxinArray[0].pageId);
-
-
+				mui('#more')[0].addEventListener("tap", function() {
+					var actionbuttons = [{
+						title: "创建群"
+					}, {
+						title: "创群须知"
+					}];
+					var actionstyle = {
+						title: "提示操作",
+						cancel: "取消",
+						buttons: actionbuttons
+					};
+					plus.nativeUI.actionSheet(actionstyle, function(e) {
+						console.log("User pressed: " + e.index);
+						if(e.index == '1'){
+							mui.openWindow('createGroup.html','createGroup.html')
+						}else if(e.index == '2'){
+							mui.openWindow('createGroupRules.html','createGroupRules.html')
+						}
+					});
+				})
 				// 批量绑定tap事件，展示不同的页面
 				mui(".mui-bar-tab").on("tap", "a", function() {
 					var tabindex = this.getAttribute("tabindex");
-
+					var more = document.getElementById('more')
+					tabindex === '0' ? more.style.display = 'block' : more.style.display = 'none'
+					var muxin_title = document.getElementById("muxin_title");
+					muxin_title.innerHTML = muxinArray[tabindex].title;
 					// 显示点击的tab选项所对应的页面
 					plus.webview.show(muxinArray[tabindex].pageId, "fade-in", 200);
 
@@ -106,7 +148,6 @@
 						}
 					}
 				})
-
 				// 延时加载
 				setTimeout("initData()", "1000");
 			});
