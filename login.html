@@ -41,6 +41,13 @@
 				width: 180px;
 				padding: 70px 5px 10px 5px;
 			}
+			.moreArea{display: flex;display: -webkit-flex;align-items: center;justify-content: space-between;padding:15px 0
+				
+			}
+			.mui-links{color:#0EAC68;text-decoration: none;!important}
+			.mui-links:hover,.mui-links:visited{color: #128E12;}
+			.otherlogin{position: fixed;bottom:20px;left:0;right:0;text-align: center;color: #0EAC68;font-size: 15px;}
+			.otherlogin img{width: 20px;vertical-align: middle;}
 		</style>
 	</head>
 
@@ -50,11 +57,8 @@
 			<div class="container-login100">
 				<div class="wrap-login100 p-t-85 p-b-20">
 					<form id="userform">
-						<span class="login100-form-title p-b-70">
-							<h5>Netty 实战</h5>
-						</span>
 						<span class="login100-form-avatar">
-							<img id="img_login_face" src="css/registLogin/arrow.jpg" alt="风间影月">
+							<img id="img_login_face" src="image/logo1.png" alt="风间影月">
 						</span>
 
 						<div class="wrap-input100 validate-input m-t-85 m-b-35">
@@ -72,14 +76,34 @@
 							</button>
 						</div>
 					</form>
-					
+					<div class="moreArea">
+						<a class="mui-links" id="forgetbtn">忘记密码</a>
+						<a class="mui-links" id="regbtn">注册页面</a>
+					</div>
+					<div class="otherlogin" id="wxlogin">
+						<img src="image/wechat.png" > 微信授权登录
+					</div>
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript" src="js/app.js" ></script>
 		<script type="text/javascript">
-			
+			var auths={};
+			var pid = 0
 			mui.plusReady(function() {
+				// 获取登录认证通道
+				plus.oauth.getServices(function(services){
+					console.log(services)
+					for(var i in services){
+						var service=services[i];
+						console.log(service.id+": "+service.authResult+", "+service.userInfo);
+						auths[service.id]=service;
+						pid = this.id
+					
+					}
+				},function(e){
+					outLine("获取登录认证失败："+e.message);
+				});
 				
 				// 判断用户是否注册登录过，如果本地内存有全局的用户对象，此时直接跳转到首页
 				var userInfo = app.getUserGlobalInfo();
@@ -149,8 +173,65 @@
 					// 阻止默认时间，阻止默认表单提交
 					e.preventDefault();
 				});
+				document.getElementById('forgetbtn').addEventListener("tap", function(e){
+					mui.openWindow('forgetpassword.html','forgetpassword.html')
+					e.preventDefault()
+				})
+				document.getElementById('regbtn').addEventListener("tap", function(e){
+					mui.openWindow('register.html','register.html')
+					e.preventDefault()
+				})
+				document.getElementById('wxlogin').addEventListener("tap", function(e){
+					mui.toast('开始请求微信授权了')
+					login(pid)
+		
+				})
+				
 			})
-			
+			// 登录认证
+			function login(id){
+				outSet("----- 登录认证 -----");
+				var auth=auths[id];
+				if(auth){
+					var w=null;
+					if(plus.os.name=="Android"){
+						w=plus.nativeUI.showWaiting();
+					}
+					document.addEventListener("pause",function(){
+						setTimeout(function(){
+							w&&w.close();w=null;
+						},2000);
+					}, false );
+					auth.login(function(){
+						w&&w.close();w=null;
+						outLine("登录认证成功：");
+						outLine(JSON.stringify(auth.authResult));
+						userinfo(auth);
+					},function(e){
+						w&&w.close();w=null;
+						outLine("登录认证失败：");
+						outLine("["+e.code+"]："+e.message);
+						plus.nativeUI.alert("详情错误信息请参考授权登录(OAuth)规范文档：http://www.html5plus.org/#specification#/specification/OAuth.html",null,"登录失败["+e.code+"]："+e.message);
+					});
+				}else{
+					outLine("无效的登录认证通道！");
+					plus.nativeUI.alert("无效的登录认证通道！",null,"登录");
+				}
+			}
+			// 获取用户信息
+			function userinfo(a){
+				outLine("----- 获取用户信息 -----");
+				a.getUserInfo(function(){
+					outLine("获取用户信息成功：");
+					outLine(JSON.stringify(a.userInfo));
+					var nickname=a.userInfo.nickname||a.userInfo.name||a.userInfo.miliaoNick;
+					plus.nativeUI.alert("欢迎“"+nickname+"”登录！");
+				},function(e){
+					outLine("获取用户信息失败：");
+					outLine("["+e.code+"]："+e.message);
+					plus.nativeUI.alert("获取用户信息失败！",null,"登录");
+				});
+			}
 		</script>
 
 	</body>
