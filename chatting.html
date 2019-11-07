@@ -25,13 +25,15 @@
 
 		<header class="mui-bar mui-bar-nav title" style="position: fixed;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left title-color"></a>
+			<a id="more" class="mui-icon mui-icon-bars mui-icon-right-nav mui-pull-right title-color"></a>
 			<h1 class="mui-title title-color"><b id="chatting-nickname">慕 信</b></h1>
+			
 		</header>
 
 		<div id="msg-outter" class="mui-content">
 			<div id='msg'>
 				
-				<!--<div class="friend_lists">
+				<div class="friend_lists">
 					<div class="header_img">
 						<img src="image/face-default-cat.png" width="40px" height="40px" />
 					</div>
@@ -47,7 +49,7 @@
 					<div class="msg-wrapper left">
 						<p class="msg-right-green">好的，没问题！时间地点？</p>
 					</div>
-				</div>-->
+				</div>
 
 			</div>
 		</div>
@@ -71,8 +73,23 @@
 				var friendUserId;
 				var friendNickname;
 				var friendFaceImage;
+				var buttons=[{title:'群信息'},{title:'群主设置'}];
 				mui.plusReady(function(){
-					
+				document.getElementById('more').addEventListener("tap",function(e){
+					console.log('more',e)
+					plus.nativeUI.actionSheet({title:'群操作',cancel:'取消',buttons:buttons}, function(e){
+						console.log('more',e)
+							var data = {id:'',url:''}
+							if(e.index == 1){
+								data = {id:'groupSetting.html',url:'groupSetting.html'}
+							}else if(e.index == 2){
+								data = {id:'groupMasterSetting.html',url:'groupMasterSetting.html'}
+							}
+							mui.openWindow(data.id,data.url)
+					})
+					e.preventDefault()
+				})
+
 					// 获取我自己的用户信息					
 					var me = app.getUserGlobalInfo();
 					

@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>群信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<style type="text/css">
+			.mui-btn-block {
+				padding: 10px 0
+			}
+
+			.mui-input-row label~input,
+			.mui-input-row label {
+				font-size: 15px;
+			}
+
+			.logo-icon {
+				width: 100px;
+				margin: 70px auto 30px auto;
+				border-radius: 50%;
+			}
+
+			.text {
+				font-size: 14px;
+				color: #666666;
+			}
+
+			.custorm-form.mui-input-group:before,
+			.custorm-form.mui-input-group:after {
+				height: 0;
+			}
+
+			.custorm-form .mui-input-row {
+				height: 50px;
+				line-height: 50px;
+				font-size: 1;
+			}
+
+			.custorm-form .mui-input-row label {
+				padding: 16px 15px;
+			}
+
+			.custorm-form .codebtn {
+				position: absolute;
+				right: 10px;
+				top: 5px;
+				width: auto;
+				padding: 8px 15px
+			}
+
+			.three-row .mui-input-clear {
+				padding-right: 90px;
+			}
+
+			.three-row .mui-input-clear~.mui-icon-clear {
+				right: 90px;
+			}
+
+			.m-t-10 {
+				margin-top: 10px;
+			}
+			.text-right{display: inline-block;vertical-align: middle;margin: 0 10px;}
+			.mui-btn.mui-btn-mini{padding:2px 4px;color:#1AAD19}
+			.mui-navigate-center{color:#1AAD19!important;text-align: center;}
+			.mui-content-padded{margin:30px auto}
+			.mui-content-padded>.mui-btn-default{border:0;font-size: 15px;color: red;}
+			#groupsetting .mui-table-view:first-child{margin-top: 0;}
+			.groupsetting .mui-table-view .mui-table-view-cell a{font-size: 14px;color: #444;}
+			.mui-switch{font-size: 12px;}
+			.mui-switch.mui-active:before{left:3px;content: '闭群';}  
+			.mui-switch:before{content: '开群';}  
+			.mui-checkbox input[type=checkbox]{
+				right:0;
+			}
+			.mui-checkbox input[type=checkbox]:checked:before{color:#0EAC68}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title title-color">群主设置</h1>
+		</header>
+		<div class="mui-content groupsetting" id="groupsetting">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+				<a class="mui-navigate-right2" id="sexbtn">
+					群状态 <div class="mui-switch mui-switch-mini mui-active">
+						  <div class="mui-switch-handle"></div>
+				</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view m-t-10">
+
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="sexbtn">
+						群组名称 <span class="mui-pull-right">我是测试群</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2" id="siginbtn">
+						群组类型 <span class="mui-pull-right">私聊群</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="siginbtn">
+						群到期时间 
+						<span class="mui-pull-right">
+							<span class="text-right">2019-10-10 10:10:10</span>
+							续费
+						</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2" id="siginbtn">
+						成员列表 <span class="mui-pull-right">1人</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2" id="siginbtn">
+						群组公告 <span class="mui-pull-right">我是公告内容测试</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2" id="siginbtn">
+						红包到期时间 <span class="mui-pull-right">12</span>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view m-t-10">
+			
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2" id="sharecodebtn">
+						客服微信号 
+						<span class="mui-pull-right">
+							<span class="text-right">w68d</span>
+					
+							</span>
+						</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="siginbtn">
+						群客服码
+					</a>
+				</li>
+		
+			</ul>
+			
+			<ul class="mui-table-view m-t-10">
+				
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;" class="mui-navigate-right">
+						<div class="mui-media-object mui-pull-left">
+							<div class="mui-input-row mui-checkbox ">
+							<label></label>
+							<input name="Checkbox" type="checkbox" checked>
+						</div>
+						</div>
+						<div class="mui-media-body">
+							特殊数字奖励
+							<p class="mui-ellipsis" style="font-size:12px">
+								当用户红包柴中了特殊数字时，获得群主给出的奖励。</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view m-t-10">
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;" class="mui-navigate-right">
+						<div class="mui-media-object mui-pull-left">
+							<div class="mui-input-row mui-checkbox ">
+							<label></label>
+							<input name="Checkbox" type="checkbox" checked>
+						</div>
+						</div>
+						<div class="mui-media-body">
+							群主抽水
+							<p class="mui-ellipsis" style="font-size:12px">
+								以没给用户账户的进出金额，进行抽水。抽的积分，进入群主账户。</p>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="siginbtn">
+						发包抽水 <span class="mui-pull-right">0.00%</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="siginbtn">
+						抢包抽水 <span class="mui-pull-right">0.00%</span>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view m-t-10">
+				
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;" class="mui-navigate-right">
+						<div class="mui-media-object mui-pull-left">
+							<div class="mui-input-row mui-checkbox ">
+							<label></label>
+							<input name="Checkbox" type="checkbox" checked>
+						</div>
+						</div>
+						<div class="mui-media-body">
+							推荐奖励
+							<p class="mui-ellipsis" style="font-size:12px">
+								鼓励群内用户通过推荐码发展用户，当下一个发红包时，按金额比例从群主账户给出奖励。</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view m-t-10">
+
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="sharecodebtn">
+						玩法设置
+						
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="siginbtn">
+						积分异常增长警示值 <span class="mui-pull-right">2000</span>
+					</a>
+				</li>
+			</ul>
+
+		</div>
+
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function() {
+				// 用户退出
+				var submitbtn = document.getElementById("submitbtn");
+				var phone = document.getElementById("phone");
+				var code = document.getElementById("code");
+				submitbtn.addEventListener("tap", function() {
+					document.getElementById('form')
+					mui.toast('提交数据', phone.value + code.value)
+
+				});
+				//发送验证吗
+				document.getElementById('sendcode').addEventListener("tap", function() {
+					mui.toast('发送验证码成功！', phone.value + code.value)
+				});
+			});
+		</script>
+	</body>
+
+</html>
