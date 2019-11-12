@@ -8,7 +8,7 @@ window.app = {
 	/**
 	 * 后端服务发布的url地址
 	 */
-	serverUrl: 'http://192.168.1.3:8080',
+	serverUrl: 'http://redb.xinyu1978.com/',
 	
 	/**
 	 * 图片服务器的url地址
@@ -34,8 +34,8 @@ window.app = {
 	 * @param {Object} type
 	 */
 	showToast: function(msg, type) {
-		plus.nativeUI.toast(msg, 
-			{icon: "image/" + type + ".png", verticalAlign: "center"})
+		if(plus) plus.nativeUI.toast(msg, {icon: "image/" + type + ".png", verticalAlign: "center"})
+		else mui.toast(msg)	
 	},
 	
 	/**
