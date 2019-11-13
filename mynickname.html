@@ -7,23 +7,38 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="css/header.css" />
-
+		<style type="text/css">
+			.cdata{text-align: center;padding: 30px auto;}
+			.cdata .text{font-size: 0.75rem;color: #999999;margin-top: 1.25rem;}
+			.mui-td,.mui-th{font-size: 12px;}
+			.mui-table.mui-th{background: #fff;padding: 10px 0;}
+		</style>
 	</head>
 
 	<body>
 
 		<header class="mui-bar mui-bar-nav title">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
-			<a id="link_submit_nickname" class="mui-icon mui-icon-right-nav mui-pull-right" 
-				style="color: white;font-size: 14px;line-height: 25px;">完成</a>
-			<h1 class="mui-title title-color">设置昵称</h1>
+			<a id="link_more" class="mui-icon mui-icon-more mui-pull-right" style="color: #fff;"></a>
+			<h1 class="mui-title title-color">钻石充值</h1>
 		</header>
 
 		<div class="mui-content">
-			<div class="mui-input-row">
-			    <input id="txt_nickname" type="text" class="mui-input-speech mui-input-clear" 
-			    	placeholder="修改昵称">
+			<div class="mui-table mui-th">
+			    <div class="mui-table-cell mui-text-center">  
+			        我是A  
+			    </div>  
+			    <div class="mui-table-cell mui-text-center">  
+			        我是B  
+			    </div>  
+			    <div class="mui-table-cell mui-text-center">  
+			        我是C  
+			    </div>  
 			</div>
+			<ul class="mui-table-view" id="datalist">
+					
+					
+				</ul>
 		</div>
 
 		<script src="js/mui.min.js"></script>
@@ -33,56 +48,42 @@
 
 			mui.plusReady(function() {
 				var user = app.getUserGlobalInfo();
-				var mynickname = user.nickname;
-				
-				var txt_nickname = document.getElementById("txt_nickname");
-				txt_nickname.value = mynickname;
-				
-				// 提交事件，修改昵称
-				var link_submit_nickname = document.getElementById("link_submit_nickname");
-				link_submit_nickname.addEventListener("tap", function() {
-					var newNickname = txt_nickname.value;
-					
-					if (newNickname.length < 1) {
-						app.showToast("昵称长度太短", "error");
-						return false;
-					}
-					if (newNickname.length > 8) {
-						app.showToast("昵称不能超过8位", "error");
-						return false;
-					}
-					
+				console.log('token',user.token)
 					plus.nativeUI.showWaiting("请稍微...");
-					mui.ajax(app.serverUrl + "/u/setNickname",{
-						data:{
-							userId:user.id,
-							nickname:newNickname
-						},
+					mui.ajax(app.serverUrl + "user/diamondRecord",{
 						dataType:'json',//服务器返回json格式数据
 						type:'post',//HTTP请求类型
 						timeout:10000,//超时时间设置为10秒；
-						headers:{'Content-Type':'application/json'},	              
+						headers:{'Content-Type':'application/json','token':user.token},	              
 						success:function(data){
 							//服务器返回响应，根据响应结果，分析是否登录成功；
 							plus.nativeUI.closeWaiting();
-							
-							if (data.status == 200) {
-								// 登录或者注册成功之后，保存全局用户对象到本地缓存
-								var userInfoJson = data.data;
-								app.setUserGlobalInfo(userInfoJson);
-								
-								// 触发另外一个webview的自定义事件，可以使用 mui.fire()
-								var imooc_meWebview = plus.webview.getWebviewById("imooc-me.html");
-								mui.fire(imooc_meWebview, "refresh");
-								
-								// 页面跳转
-								mui.back();
+							if (data.sucess) {
+								var domParant = document.getElementById('datalist')
+								var list = data.data.list
+								var tmp=''
+								if(list){
+									for (var i = 0; i < list.length; i++) {
+										
+										tmp+='<li class="mui-table-view-cell"><div class="mui-table mui-td">'+
+											    '<div class="mui-table-cell mui-text-center">'+list[i].number+'</div>'+  
+											    '<div class="mui-table-cell mui-text-center">'+list[i].time+'</div> '+ 
+											    '<div class="mui-table-cell mui-text-center">'+list[i].status+'</div>'+  
+											'</div></li>'
+									}
+									domParant.innerHTML=tmp
+								}else{
+									domParant.innerHTML='<li class="mui-table-view-cell no-paddingLR mui-text-center">'+
+									'<div class="cdata"><img src="image/1.png" width="90"><div class="text">-暂无相关数据-</div></div></li>'
+								}
+								cc.log(data)
 							} else {
 								app.showToast(data.msg, "error");
+								document.getElementById('datalist').innerHTML='<li class="mui-table-view-cell no-paddingLR mui-text-center">'+
+								'<div class="cdata"><img src="image/1.png" width="90"><div class="text">-暂无相关数据-</div></div></li>'
 							}
 						}
 					});
-				});
 				
 			});
 			

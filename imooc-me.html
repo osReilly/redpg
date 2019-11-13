@@ -47,7 +47,7 @@
 		    </ul>
 			<ul class="mui-table-view m-t-10">
 					<li class="mui-table-view-cell">
-						<a class="mui-navigate-right">
+						<a class="mui-navigate-right" id="diamondbtn">
 							<img src="image/zuan.png" class="item-icon">钻石数量
 							<span class="mui-badge mui-badge-inverted" id="span_diamond">钻石数量 2000</span>
 						</a>
@@ -174,17 +174,20 @@
 				var link_myface = document.getElementById("link_myface");
 				link_myface.addEventListener("tap", function() {
 					// mui.openWindow("myface.html", "myface.html");
+					
+					var imooc_meWebview = plus.webview.getWebviewById("personinfo.html");
+					mui.fire(imooc_meWebview, "refreshUser");
 					mui.openWindow("personinfo.html","personinfo.html")
 				});
 				var zengsong = document.getElementById('zengs')
 				zengsong.addEventListener("tap",function(){
 					mui.openWindow("zuanshi-zengs.html","zuanshi-zengs.html")
 				})
-				// // 页面跳转，修改昵称
-				// var link_nickname = document.getElementById("link_nickname");
-				// link_nickname.addEventListener("tap", function() {
-				// 	mui.openWindow("mynickname.html", "mynickname.html");
-				// });
+				// 页面跳转，修改昵称
+				var diamondbtn = document.getElementById("diamondbtn");
+				diamondbtn.addEventListener("tap", function() {
+					mui.openWindow("mynickname.html", "mynickname.html");
+				});
 				// // 查看我的二维码
 				// var link_my_qrcode = document.getElementById("link_my_qrcode");
 				// link_my_qrcode.addEventListener("tap", function(){

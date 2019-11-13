@@ -83,7 +83,7 @@
 			mui.plusReady(function() {
 				var user = app.getUserGlobalInfo();
 			var signtext = document.getElementById("signtext")
-			
+			signtext.value = user.signature
 			signtext.addEventListener("input",function(e){
 				console.log("e",e.target.value.length)
 				var len = 30 - e.target.value.length
@@ -103,6 +103,15 @@
 						console.log(JSON.stringify(data));
 						if (data.success) {
 							 mui.toast(data.msg)
+							 // 登录或者注册成功之后，保存全局用户对象到本地缓存
+							 var userInfoJson = data.data;
+							 app.setUserGlobalInfo(userInfoJson);
+							 // 触发另外一个webview的自定义事件，可以使用 mui.fire()
+						
+							 var refreshUser = plus.webview.getWebviewById("personinfo.html");
+							 mui.fire(refreshUser, "refreshUser");
+							 
+							 mui.back()
 						} else {
 							app.showToast(data.msg, "error");
 						}

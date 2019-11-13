@@ -93,7 +93,7 @@
 
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right2" id="sexbtn">
-						性别 <span class="mui-pull-right" id="span_sex"></span>
+						性别 <span class="mui-pull-right" id="span_sex">男</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
@@ -107,16 +107,15 @@
 		<script src="js/mui.min.js"></script>
 		<script src="js/app.js"></script>
 		<script type="text/javascript">
-			mui.init()
-			mui.plusReady(function() {
+			function refreshUserInfo() {
 				var user = app.getUserGlobalInfo();
-				console.log(JSON.stringify(user))
+				console.warn('refreshUserInfo:',JSON.stringify(user))
+				
 				if (user != null) {
 					var faceImage = user.avatar;
 					var nickname = user.nickname;
 					var username = user.username;
-					var diamond = user.diamond;
-					var signature = user.signature
+					var signature = user.signature;
 					var sex = user.sex ===1 ?'男':'女'
 					var span_nickname = document.getElementById("span_nickname");
 					var span_username = document.getElementById("span_username");
@@ -130,13 +129,22 @@
 						var img_my_face = document.getElementById("myhead");
 						img_my_face.src =faceImage;
 					}
-				}	
+				}
 				
-			var buttons=[{title:'男'},{title:'女'}]
-			var sexbtn = document.getElementById("sexbtn")
+			}
 			
-			sexbtn.addEventListener("tap", function() {
-				plus.nativeUI.actionSheet({title:'性别',cancel:'取消',buttons:buttons}, function(e){
+			mui.init()
+			mui.plusReady(function() {
+				// 添加自定义事件，刷新头像
+				window.addEventListener("refreshUser", function(){
+					refreshUserInfo();
+				});
+				
+				var user = app.getUserGlobalInfo();
+				refreshUserInfo()
+			
+			document.getElementById("sexbtn").addEventListener("tap", function() {
+				plus.nativeUI.actionSheet({title:'性别',cancel:'取消',buttons:[{title:'男'},{title:'女'}]}, function(e){
 					mui.ajax(app.serverUrl+'user/update',{
 						data:{
 							sex:e.index
@@ -149,7 +157,17 @@
 							console.log(JSON.stringify(data));
 							if (data.success) {
 								 mui.toast(data.msg)
-								sexbtn.children[0].innerHTML = e.index === 1 ?'男':'女'
+								sexbtn.children[0].innerHTML = e.index === 1 ?'男':'女';
+								// 登录或者注册成功之后，保存全局用户对象到本地缓存
+								var userInfoJson = data.data;
+								app.setUserGlobalInfo(userInfoJson);
+								// 触发另外一个webview的自定义事件，可以使用 mui.fire()
+								var imooc_meWebview = plus.webview.getWebviewById("imooc-me.html");
+								mui.fire(imooc_meWebview, "refresh");
+								
+								// 页面跳转
+								// mui.back();
+								
 							} else {
 								app.showToast(data.msg, "error");
 							}
@@ -161,8 +179,7 @@
 			document.getElementById("siginbtn").addEventListener("tap", function() {
 				mui.openWindow("signname.html", "signname.html");
 			})
-			var myhead = document.getElementById("myhead")
-				myhead.addEventListener("tap",function(){
+			document.getElementById("myhead").addEventListener("tap",function(){
 					 plus.gallery.pick( function(path){
 							console.log(path);
 							var oldpath = myhead.getAttribute('src')
@@ -191,7 +208,9 @@
 							console.log( "取消选择图片" );
 						}, {filter:"image"} );
 				})
+				
 			});
+
 		</script>
 	</body>
 
