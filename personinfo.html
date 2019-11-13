@@ -82,12 +82,10 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					昵称 <input class="mui-pull-right item-input" value="test" />
+					昵称 <input class="mui-pull-right item-input" value="test" id="span_nickname" />
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						账号 <span class="mui-pull-right">100000</span>
-					</a>
+					账号 <span class="mui-pull-right" id="span_username">100000</span>
 				</li>
 			</ul>
 
@@ -95,12 +93,12 @@
 
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right2" id="sexbtn">
-						性别 <span class="mui-pull-right">男</span>
+						性别 <span class="mui-pull-right" id="span_sex"></span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right2" id="siginbtn">
-						个性签名 <span class="mui-pull-right">我在这里</span>
+						个性签名 <span class="mui-pull-right" id="span_signature">我在这里</span>
 					</a>
 				</li>
 			</ul>
@@ -111,26 +109,88 @@
 		<script type="text/javascript">
 			mui.init()
 			mui.plusReady(function() {
+				var user = app.getUserGlobalInfo();
+				console.log(JSON.stringify(user))
+				if (user != null) {
+					var faceImage = user.avatar;
+					var nickname = user.nickname;
+					var username = user.username;
+					var diamond = user.diamond;
+					var signature = user.signature
+					var sex = user.sex ===1 ?'男':'女'
+					var span_nickname = document.getElementById("span_nickname");
+					var span_username = document.getElementById("span_username");
+					var span_signature =  document.getElementById("span_signature");
+					var span_sex =  document.getElementById("span_sex");
+					span_nickname.innerHTML = nickname;
+					span_username.innerHTML = username;
+					span_signature.innerHTML = signature
+					span_sex.innerHTML = sex
+					if (app.isNotNull(faceImage)) {
+						var img_my_face = document.getElementById("myhead");
+						img_my_face.src =faceImage;
+					}
+				}	
+				
 			var buttons=[{title:'男'},{title:'女'}]
 			var sexbtn = document.getElementById("sexbtn")
 			
 			sexbtn.addEventListener("tap", function() {
 				plus.nativeUI.actionSheet({title:'性别',cancel:'取消',buttons:buttons}, function(e){
-						sexbtn.children[0].innerHTML = e.index === 1 ?'男':'女'
+					mui.ajax(app.serverUrl+'user/update',{
+						data:{
+							sex:e.index
+						},
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						headers:{'Content-Type':'application/json','token':user.token},	              
+						success:function(data){
+							console.log(JSON.stringify(data));
+							if (data.success) {
+								 mui.toast(data.msg)
+								sexbtn.children[0].innerHTML = e.index === 1 ?'男':'女'
+							} else {
+								app.showToast(data.msg, "error");
+							}
+						}
+					});
+					
 				})
 			})
 			document.getElementById("siginbtn").addEventListener("tap", function() {
 				mui.openWindow("signname.html", "signname.html");
 			})
 			var myhead = document.getElementById("myhead")
-			myhead.addEventListener("tap",function(){
-				 plus.gallery.pick( function(path){
-				    	console.log(path);
-						if(path) myhead.setAttribute('src', path);
-				    }, function ( e ) {
-				    	console.log( "取消选择图片" );
-				    }, {filter:"image"} );
-			})
+				myhead.addEventListener("tap",function(){
+					 plus.gallery.pick( function(path){
+							console.log(path);
+							var oldpath = myhead.getAttribute('src')
+							if(path) myhead.setAttribute('src', path);
+							mui.ajax(app.serverUrl+'user/uploadAvatar',{
+								data:{
+									image:path
+								},
+								dataType:'json',//服务器返回json格式数据
+								type:'post',//HTTP请求类型
+								timeout:10000,//超时时间设置为10秒；
+								headers:{'Content-Type':'application/json','token':user.token},	              
+								success:function(data){
+									console.log(JSON.stringify(data));
+									if (data.success) {
+										 mui.toast(data.msg)
+										if(path) myhead.setAttribute('src', path);
+									} else {
+										myhead.setAttribute('src',oldpath)
+										app.showToast(data.msg, "error");
+									}
+								}
+							});
+							
+						}, function ( e ) {
+							console.log( "取消选择图片" );
+						}, {filter:"image"} );
+				})
 			});
 		</script>
 	</body>

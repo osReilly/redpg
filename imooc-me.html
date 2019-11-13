@@ -34,10 +34,12 @@
 		    		<a id="link_myface" href="javascript:;">
 						<span class="mui-pull-right mui-icon mui-icon-arrowright"
 								style="line-height: 42px;color: lightgray;margin-left: 3px;"></span>
-		    			<img class="mui-media-object mui-pull-left" src="image/face-default-cat.png">
+		    			<img class="mui-media-object mui-pull-left" src="image/face-default-cat.png" id="headimg">
 		    			<div class="mui-media-body">
-		    				幸福 <img src="image/nan.png" class="sex-icon">
-		    				<p class="mui-ellipsis">账号：399999</p>
+		    				<span id="span_nickname">
+		    					幸福 
+		    				</span><img src="image/nan.png" class="sex-icon" id="sex">
+		    				<p class="mui-ellipsis">账号：<span id="span_username"></span></p>
 		    			</div>
 		    		</a>
 		    	</li>
@@ -47,7 +49,7 @@
 					<li class="mui-table-view-cell">
 						<a class="mui-navigate-right">
 							<img src="image/zuan.png" class="item-icon">钻石数量
-							<span class="mui-badge mui-badge-inverted">钻石数量 2000</span>
+							<span class="mui-badge mui-badge-inverted" id="span_diamond">钻石数量 2000</span>
 						</a>
 					</li>
 					<li class="mui-table-view-cell">
@@ -202,7 +204,6 @@
 				//页面跳转,设置页面
 				var settingbtn = document.getElementById("settingbtn");
 				settingbtn.addEventListener("tap",function(){
-					mui.alert('settingbtn')
 					mui.openWindow("setting.html","setting.html")
 				})
 				
@@ -228,19 +229,21 @@
 				console.log(JSON.stringify(user))
 				
 				if (user != null) {
-					var faceImage = user.faceImage;
+					var faceImage = user.avatar;
 					var nickname = user.nickname;
 					var username = user.username;
-					
+					var diamond = user.diamond;
 					var span_nickname = document.getElementById("span_nickname");
 					var span_username = document.getElementById("span_username");
-					
+					var span_diamond = document.getElementById("span_diamond");
+					var sex_img = document.getElementById("sex");
 					span_nickname.innerHTML = nickname;
 					span_username.innerHTML = username;
-					
+					span_diamond.innerHTML = "钻石数量 "+diamond
+					sex_img.setAttribute('src',(user.sex === 1?'image/nan.png':'image/nv.png'))
 					if (app.isNotNull(faceImage)) {
-						var img_my_face = document.getElementById("img_my_face");
-						img_my_face.src = app.imgServerUrl + faceImage;
+						var img_my_face = document.getElementById("headimg");
+						img_my_face.src = faceImage;
 					}
 				}
 				
