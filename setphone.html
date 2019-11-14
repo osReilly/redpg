@@ -8,15 +8,51 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="css/header.css" />
 		<style type="text/css">
-			.logo-icon{width: 100px;margin:70px auto 30px auto;border-radius: 50%;}
-			.text{font-size: 14px;color: #666666;}
-			.custorm-form {margin:20px auto}
-			.custorm-form.mui-input-group:before,.custorm-form.mui-input-group:after{height: 0;}
-			.custorm-form .mui-input-row{height: 50px;line-height: 50px;font-size: 1;}
-			.custorm-form .mui-input-row label{padding:16px 15px;}
-			.custorm-form .codebtn{position: absolute;right: 10px;top:5px;width: auto;padding:8px 15px}
-			.three-row .mui-input-clear{padding-right: 90px;}
-			.three-row .mui-input-clear~.mui-icon-clear{right: 90px;}
+			.logo-icon {
+				width: 100px;
+				margin: 70px auto 30px auto;
+				border-radius: 50%;
+			}
+
+			.text {
+				font-size: 14px;
+				color: #666666;
+			}
+
+			.custorm-form {
+				margin: 20px auto
+			}
+
+			.custorm-form.mui-input-group:before,
+			.custorm-form.mui-input-group:after {
+				height: 0;
+			}
+
+			.custorm-form .mui-input-row {
+				height: 50px;
+				line-height: 50px;
+				font-size: 1;
+			}
+
+			.custorm-form .mui-input-row label {
+				padding: 16px 15px;
+			}
+
+			.custorm-form .codebtn {
+				position: absolute;
+				right: 10px;
+				top: 5px;
+				width: auto;
+				padding: 8px 15px
+			}
+
+			.three-row .mui-input-clear {
+				padding-right: 90px;
+			}
+
+			.three-row .mui-input-clear~.mui-icon-clear {
+				right: 90px;
+			}
 		</style>
 	</head>
 
@@ -27,7 +63,7 @@
 		</header>
 		<div class="mui-content" id="setphone">
 			<div class="mui-text-center">
-			<img src="image/logo1.png" class="logo-icon">
+				<img src="image/logo1.png" class="logo-icon">
 				<div class="text">
 					更改后个人信息不变，下次可以用使用新手机号登录
 				</div>
@@ -35,18 +71,18 @@
 			<form class="mui-input-group custorm-form" id="form">
 				<div class="mui-input-row">
 					<label>新手机号</label>
-					<input type="number" id="phone" class="mui-input-clear" placeholder="请输入新手机号码">
+					<input type="number" id="mobiletext" class="mui-input-clear" placeholder="请输入新手机号码">
 				</div>
 				<div class="mui-input-row three-row">
 					<label>验证码</label>
-					<input type="number" id="code" class="mui-input-clear" placeholder="请输入验证码">
+					<input type="number" id="codetext" class="mui-input-clear" placeholder="请输入验证码">
 					<button type="button" id="sendcode" class="mui-btn codebtn mui-btn-mini">获取</button>
 				</div>
-				
+
 			</form>
 			<div class="mui-content-padded">
-			<button type="button" class="mui-btn mui-btn-green mui-btn-block" id="submitbtn">确定</button>
-				
+				<button type="button" class="mui-btn mui-btn-green mui-btn-block" id="submitbtn">确定</button>
+
 			</div>
 		</div>
 
@@ -55,19 +91,42 @@
 		<script type="text/javascript">
 			mui.init()
 			mui.plusReady(function() {
-				// 用户退出
+				var user=app.getUserGlobalInfo();
+
 				var submitbtn = document.getElementById("submitbtn");
-				var phone = document.getElementById("phone");
 				var code = document.getElementById("code");
-				submitbtn.addEventListener("tap", function() {
-					document.getElementById('form')
-					mui.toast('提交数据',phone.value+code.value)
+				var codetext = document.getElementById("codetext")
+				var mobiletext = document.getElementById("mobiletext")
+				submitbtn.addEventListener("tap", function(e) {
+					mui.ajax(app.serverUrl + 'user/updateMobile?mobile='+mobiletext.value+'&code='+codetext.value, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json',
+							'token': user.token
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if (data.success) {
+								mui.toast(data.msg)
+								// 登录或者注册成功之后，保存全局用户对象到本地缓存
+								var userInfoJson = data.data;
+								app.setUserGlobalInfo(userInfoJson);
+								// 触发另外一个webview的自定义事件，可以使用 mui.fire()
+								var refreshUser = plus.webview.getWebviewById("setting.html");
+								mui.fire(refreshUser, "refreshUser");
+								mui.back()
+							} else {
+								app.showToast(data.msg, "error");
+							}
+						}
+					});
+					e.preventDefault()
 
 				});
 				//发送验证吗
-				document.getElementById('sendcode').addEventListener("tap", function() {
-					mui.toast('发送验证码成功！',phone.value+code.value)
-				});
+				app.sendCode(document.getElementById('sendcode'),codetext, mobiletext)
 			});
 		</script>
 	</body>
