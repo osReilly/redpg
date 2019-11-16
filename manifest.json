@@ -179,14 +179,14 @@
                 },
                 "oauth" : {
                     "weixin" : {
-                        "appid" : "wx3220e60977df2bcc",
-                        "appsecret" : "91c73a9a1186d1460a0bff96be89590c",
+                        "appid" : "wx69b1de13b7e95ea8",
+                        "appsecret" : "31717185b88e442d5aa1025bb7d1213a",
                         "UniversalLinks" : ""
                     }
                 },
                 "share" : {
                     "weixin" : {
-                        "appid" : "wx3220e60977df2bcc",
+                        "appid" : "wx69b1de13b7e95ea8",
                         "UniversalLinks" : ""
                     }
                 }

@@ -77,7 +77,7 @@
 		<script src="js/app.js"></script>
 		<script type="text/javascript">
 			mui.init()
-			mui.plusReady(function() {
+			mui.ready(function() {
 				var user = app.getUserGlobalInfo();
 				var txt_your_friend_username = document.getElementById("txt_your_friend_username");
 				// 提交事件，搜索朋友
@@ -86,7 +86,7 @@
 					
 					var yourFriendUsername = txt_your_friend_username.value;
 					if(!yourFriendUsername){mui.toast('输入内容不能为空');return;} 
-					
+					console.log('search--------click--------')
 					plus.nativeUI.showWaiting("请稍后...");
 					mui.ajax(app.serverUrl + "user/search?keyword=" + yourFriendUsername, {
 						dataType:'json',//服务器返回json格式数据
@@ -94,30 +94,34 @@
 						timeout:10000,//超时时间设置为10秒；
 						headers:{'Content-Type':'application/json','token':user.token},	             
 						success:function(data){
-							console.log('search',data)
+							console.log('search----------------',JSON.stringify(data))
 							//服务器返回响应
 							plus.nativeUI.closeWaiting();
-							if (data.status ) {
+							if (data.success ) {
 								var resultlist = document.getElementById("resultlist")
-								var res= [{'name':'test1','id':1000},{'name':'幸福','id':22000}]
+								var res= data.data//[{'name':'test1','id':1000},{'name':'幸福','id':22000}]
 								var fragrements=[]
+								if(res.length){
 								for (var i=0;i<res.length;i++) {
-									fragrements.push('<li class="mui-table-view-cell mui-media">'+
+									fragrements.push('<li friendUserId="' + res[i].id + '" friendNickname="' + res[i].nickname+ '" friendFaceImage="' + res[i].avatar+ '"friendUsername="' + res[i].username+ '"  class="mui-table-view-cell mui-media">'+
 									'<a href="javascript:;">'+
-									'<img class="mui-media-object mui-pull-left" src="'+res[i].avatar+">'+
+									'<img class="mui-media-object mui-pull-left" src="'+res[i].avatar+'">'+
 									'<div class="mui-media-body">'+res[i].nickname+
 									'	<p class="mui-ellipsis">'+res[i].username+'</p>'+
 									'</div></a></li>')
 								}
 								resultlist.innerHTML=fragrements.join('')
-								mui.openWindow({
-									url: "searchFriendsResult.html",
-									id: "searchFriendsResult.html",
-									styles: {},
-									extras: {
-										willBeFriend: data.data
-									}
-								});
+								}else{
+									mui.toast('没有对应的数据')
+								}
+								// mui.openWindow({
+								// 	url: "searchFriendsResult.html",
+								// 	id: "searchFriendsResult.html",
+								// 	styles: {},
+								// 	extras: {
+								// 		willBeFriend: data.data
+								// 	}
+								// });
 								
 							} else {
 								console.log('search-erro',data)
@@ -130,7 +134,27 @@
 					});
 					e.preventDefault()
 				});
-				
+				// 为聊天快照列表量绑定点击事件
+				mui("#resultlist").on("tap", ".mui-table-view-cell", function(e){
+					var friendUserId = this.getAttribute("friendUserId");
+					var friendNickname = this.getAttribute("friendNickname");
+					var friendFaceImage = this.getAttribute("friendFaceImage");
+					var friendUsername = this.getAttribute("friendUsername");
+					
+					// 打开聊天子页面
+					mui.openWindow({
+						url: "searchFriendsResult.html",
+						id: "chatting-" + friendUserId,	// 每个朋友的聊天页面都是唯一对应的
+						extras: {
+							friendUserId: friendUserId,
+							friendNickname: friendNickname,
+							friendFaceImage: friendFaceImage,
+							friendUsername:friendUsername
+						}
+					});
+					
+			
+				});
 			});
 			
 		</script>

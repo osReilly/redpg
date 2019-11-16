@@ -40,12 +40,29 @@ window.app = {
 		})
 		else mui.toast(msg)
 	},
-
-	sendCode: function(dom,code, phone, cb) {
+	dateFtt: function(fmt, date) {
+		var o = {
+			"M+": date.getMonth() + 1, //月份 
+			"d+": date.getDate(), //日 
+			"h+": date.getHours(), //小时 
+			"m+": date.getMinutes(), //分 
+			"s+": date.getSeconds(), //秒 
+			"q+": Math.floor((date.getMonth() + 3) / 3), //季度 
+			"S": date.getMilliseconds() //毫秒 
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+		for (var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	},
+	sendCode: function(dom, code, phone, cb) {
 		//发送验证吗
 		var timer = null,
 			count = 30
-		dom.addEventListener("tap", function() {
+		dom.addEventListener("tap", function(e) {
+			e.preventDefault()
 			dom.setAttribute('disabled', 'disabled')
 			var params = 'sendCode?moblie=' + phone.value
 			if (!app.isNotNull(phone.value)) {
@@ -57,7 +74,7 @@ window.app = {
 					if (res.success) {
 						timer = window.setInterval(function() {
 							count--;
-							dom.innerHTML = count+'s'
+							dom.innerHTML = count + 's'
 							if (count <= 0 && timer) {
 								window.clearInterval(timer)
 								dom.innerHTML = '发送'
@@ -70,6 +87,7 @@ window.app = {
 					if (cb) cb()
 				}, 'json')
 			}
+			return false
 		});
 	},
 	/**
