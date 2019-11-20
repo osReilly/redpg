@@ -101,8 +101,8 @@
 					});
 					
 					// 获取上一个页面传入的好友属性值
-					friendUserId = chattingWebview.friendUserId;
-					friendNickname = chattingWebview.friendNickname;
+					friendUserId = chattingWebview.groupId;
+					friendNickname = chattingWebview.groupName;
 					friendFaceImage = chattingWebview.friendFaceImage;
 					
 					// 标题改为朋友的昵称
@@ -162,7 +162,7 @@
 						send.setAttribute("class", "mui-btn-gray");
 						
 						// 构建ChatMsg
-						var chatMsg = new app.ChatMsg(me.id, friendUserId, msg_text_val, null);
+						var chatMsg = new app.ChatMsg(app.CHAT, 1,friendUserId, msg_text_val);
 						// 构建DataContent
 						var dataContent = new app.DataContent(app.CHAT, chatMsg, null);
 						

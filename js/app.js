@@ -3,7 +3,7 @@ window.app = {
 	/**
 	 * netty服务后端发布的url地址
 	 */
-	nettyServerUrl: 'ws://192.168.1.3:8088/ws',
+	nettyServerUrl: 'ws://47.106.228.0:8088/ws',
 	
 	/**
 	 * 后端服务发布的url地址
@@ -34,8 +34,7 @@ window.app = {
 	 * @param {Object} type
 	 */
 	showToast: function(msg, type) {
-		if(plus) plus.nativeUI.toast(msg, {icon: "image/" + type + ".png", verticalAlign: "center"})
-		else mui.toast(msg)	
+		plus?plus.nativeUI.toast(msg, {icon: "image/" + type + ".png", verticalAlign: "center"}):mui.toast(msg)	
 	},
 	
 	/**
@@ -44,14 +43,14 @@ window.app = {
 	 */
 	setUserGlobalInfo: function(user) {
 		var userInfoStr = JSON.stringify(user);
-		plus.storage.setItem("userInfo", userInfoStr);
+		window.localStorage? window.localStorage.setItem("userInfo", userInfoStr):plus.storage.setItem("userInfo", userInfoStr)
 	},
 	
 	/**
 	 * 获取用户的全局对象
 	 */
 	getUserGlobalInfo: function() {
-		var userInfoStr = plus.storage.getItem("userInfo");
+		var userInfoStr = window.localStorage? window.localStorage.getItem("userInfo"): plus.storage.getItem("userInfo");
 		return JSON.parse(userInfoStr);
 	},
 	
@@ -59,7 +58,7 @@ window.app = {
 	 * 登出后，移除用户全局对象
 	 */
 	userLogout: function() {
-		plus.storage.removeItem("userInfo");
+		window.localStorage?window.localStorage.removeItem("userInfo"):plus.storage.removeItem("userInfo");
 	},
 	
 	/**
@@ -304,11 +303,24 @@ window.app = {
 	 * @param {Object} msg
 	 * @param {Object} msgId
 	 */
-	ChatMsg: function(senderId, receiverId, msg, msgId){
-		this.senderId = senderId;
-		this.receiverId = receiverId;
-		this.msg = msg;
-		this.msgId = msgId;
+	CONNECTMsg: function(action, token){
+		this.cmd = action;
+		 this.data = {token:token};
+	},
+	/**
+	 * 和后端的 ChatMsg 聊天模型对象保持一致
+	 * @param {Object} senderId
+	 * @param {Object} receiverId
+	 * @param {Object} msg
+	 * @param {Object} msgId
+	 */
+	ChatMsg: function(action,type, groupId, message){
+		// this.senderId = senderId;
+		// this.receiverId = receiverId;
+		// this.msg = msg;
+		// this.msgId = msgId;
+		this.cmd = action;
+		this.data = {type:type,groupId:groupId,message:message};
 	},
 	
 	/**
@@ -318,8 +330,8 @@ window.app = {
 	 * @param {Object} extand
 	 */
 	DataContent: function(action, chatMsg, extand){
-		this.action = action;
-		this.chatMsg = chatMsg;
+		this.cmd = action;
+		this.data = chatMsg;
 		this.extand = extand;
 	},
 	
