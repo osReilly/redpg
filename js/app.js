@@ -1,20 +1,25 @@
 window.app = {
-	
+
 	/**
 	 * netty服务后端发布的url地址
 	 */
+<<<<<<< HEAD
 	nettyServerUrl: 'ws://47.106.228.0:8088/ws',
 	
+=======
+	nettyServerUrl: 'ws://192.168.1.3:8088/ws',
+
+>>>>>>> d13b284ecd98ff4365d1f81367a58ad70597b8e1
 	/**
 	 * 后端服务发布的url地址
 	 */
 	serverUrl: 'http://redb.xinyu1978.com/',
-	
+
 	/**
 	 * 图片服务器的url地址
 	 */
 	imgServerUrl: 'http://192.168.1.70:88/imooc/',
-	
+
 	/**
 	 * 判断字符串是否为空
 	 * @param {Object} str
@@ -27,16 +32,73 @@ window.app = {
 		}
 		return false;
 	},
-	
+
 	/**
 	 * 封装消息提示框，默认mui的不支持居中和自定义icon，所以使用h5+
 	 * @param {Object} msg
 	 * @param {Object} type
 	 */
 	showToast: function(msg, type) {
+<<<<<<< HEAD
 		plus?plus.nativeUI.toast(msg, {icon: "image/" + type + ".png", verticalAlign: "center"}):mui.toast(msg)	
+=======
+		if (plus) plus.nativeUI.toast(msg, {
+			icon: "image/" + type + ".png",
+			verticalAlign: "center"
+		})
+		else mui.toast(msg)
 	},
-	
+	dateFtt: function(fmt, date) {
+		var o = {
+			"M+": date.getMonth() + 1, //月份 
+			"d+": date.getDate(), //日 
+			"h+": date.getHours(), //小时 
+			"m+": date.getMinutes(), //分 
+			"s+": date.getSeconds(), //秒 
+			"q+": Math.floor((date.getMonth() + 3) / 3), //季度 
+			"S": date.getMilliseconds() //毫秒 
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+		for (var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	},
+	sendCode: function(dom, code, phone, cb) {
+		//发送验证吗
+		var timer = null,
+			count = 30
+		dom.addEventListener("tap", function(e) {
+			e.preventDefault()
+			dom.setAttribute('disabled', 'disabled')
+			var params = 'sendCode?moblie=' + phone.value
+			if (!app.isNotNull(phone.value)) {
+				phone.focus();
+			} else {
+				code.focus();
+				mui.post(app.serverUrl + params, function(res) {
+					mui.alert(res.msg + res.data)
+					if (res.success) {
+						timer = window.setInterval(function() {
+							count--;
+							dom.innerHTML = count + 's'
+							if (count <= 0 && timer) {
+								window.clearInterval(timer)
+								dom.innerHTML = '发送'
+								dom.removeAttribute('disabled')
+							}
+						}, 1000)
+
+
+					}
+					if (cb) cb()
+				}, 'json')
+			}
+			return false
+		});
+>>>>>>> d13b284ecd98ff4365d1f81367a58ad70597b8e1
+	},
 	/**
 	 * 保存用户的全局对象
 	 * @param {Object} user
@@ -45,7 +107,7 @@ window.app = {
 		var userInfoStr = JSON.stringify(user);
 		window.localStorage? window.localStorage.setItem("userInfo", userInfoStr):plus.storage.setItem("userInfo", userInfoStr)
 	},
-	
+
 	/**
 	 * 获取用户的全局对象
 	 */
@@ -53,14 +115,14 @@ window.app = {
 		var userInfoStr = window.localStorage? window.localStorage.getItem("userInfo"): plus.storage.getItem("userInfo");
 		return JSON.parse(userInfoStr);
 	},
-	
+
 	/**
 	 * 登出后，移除用户全局对象
 	 */
 	userLogout: function() {
 		window.localStorage?window.localStorage.removeItem("userInfo"):plus.storage.removeItem("userInfo");
 	},
-	
+
 	/**
 	 * 保存用户的联系人列表
 	 * @param {Object} contactList
@@ -69,32 +131,32 @@ window.app = {
 		var contactListStr = JSON.stringify(contactList);
 		plus.storage.setItem("contactList", contactListStr);
 	},
-	
+
 	/**
 	 * 获取本地缓存中的联系人列表
 	 */
 	getContactList: function() {
 		var contactListStr = plus.storage.getItem("contactList");
-		
+
 		if (!this.isNotNull(contactListStr)) {
 			return [];
 		}
-		
+
 		return JSON.parse(contactListStr);
 	},
-	
+
 	/**
 	 * 根据用户id，从本地的缓存（联系人列表）中获取朋友的信息
 	 * @param {Object} friendId
 	 */
 	getFriendFromContactList: function(friendId) {
 		var contactListStr = plus.storage.getItem("contactList");
-		
+
 		// 判断contactListStr是否为空
 		if (this.isNotNull(contactListStr)) {
 			// 不为空，则把用户信息返回
 			var contactList = JSON.parse(contactListStr);
-			for (var i = 0 ; i < contactList.length ; i ++) {
+			for (var i = 0; i < contactList.length; i++) {
 				var friend = contactList[i];
 				if (friend.friendUserId == friendId) {
 					return friend;
@@ -106,7 +168,7 @@ window.app = {
 			return null;
 		}
 	},
-	
+
 	/**
 	 * 保存用户的聊天记录
 	 * @param {Object} myId
@@ -117,7 +179,7 @@ window.app = {
 	saveUserChatHistory: function(myId, friendId, msg, flag) {
 		var me = this;
 		var chatKey = "chat-" + myId + "-" + friendId;
-		
+
 		// 从本地缓存获取聊天记录是否存在
 		var chatHistoryListStr = plus.storage.getItem(chatKey);
 		var chatHistoryList;
@@ -128,16 +190,16 @@ window.app = {
 			// 如果为空，赋一个空的list
 			chatHistoryList = [];
 		}
-		
+
 		// 构建聊天记录对象
 		var singleMsg = new me.ChatHistory(myId, friendId, msg, flag);
-		
+
 		// 向list中追加msg对象
 		chatHistoryList.push(singleMsg);
-		
+
 		plus.storage.setItem(chatKey, JSON.stringify(chatHistoryList));
 	},
-	
+
 	/**
 	 * 获取用户聊天记录
 	 * @param {Object} myId
@@ -155,16 +217,16 @@ window.app = {
 			// 如果为空，赋一个空的list
 			chatHistoryList = [];
 		}
-		
+
 		return chatHistoryList;
 	},
-	
+
 	// 删除我和朋友的聊天记录
 	deleteUserChatHistory: function(myId, friendId) {
 		var chatKey = "chat-" + myId + "-" + friendId;
 		plus.storage.removeItem(chatKey);
 	},
-	
+
 	/**
 	 * 聊天记录的快照，仅仅保存每次和朋友聊天的最后一条消息
 	 * @param {Object} myId
@@ -175,7 +237,7 @@ window.app = {
 	saveUserChatSnapshot: function(myId, friendId, msg, isRead) {
 		var me = this;
 		var chatKey = "chat-snapshot" + myId;
-		
+
 		// 从本地缓存获取聊天快照的list
 		var chatSnapshotListStr = plus.storage.getItem(chatKey);
 		var chatSnapshotList;
@@ -183,7 +245,7 @@ window.app = {
 			// 如果不为空
 			chatSnapshotList = JSON.parse(chatSnapshotListStr);
 			// 循环快照list，并且判断每个元素是否包含（匹配）friendId，如果匹配，则删除
-			for (var i = 0 ; i < chatSnapshotList.length ; i ++) {
+			for (var i = 0; i < chatSnapshotList.length; i++) {
 				if (chatSnapshotList[i].friendId == friendId) {
 					// 删除已经存在的friendId所对应的快照对象
 					chatSnapshotList.splice(i, 1);
@@ -194,16 +256,16 @@ window.app = {
 			// 如果为空，赋一个空的list
 			chatSnapshotList = [];
 		}
-		
+
 		// 构建聊天快照对象
 		var singleMsg = new me.ChatSnapshot(myId, friendId, msg, isRead);
-		
+
 		// 向list中追加快照对象
 		chatSnapshotList.unshift(singleMsg);
-		
+
 		plus.storage.setItem(chatKey, JSON.stringify(chatSnapshotList));
 	},
-	
+
 	/**
 	 * 获取用户快照记录列表
 	 */
@@ -220,10 +282,10 @@ window.app = {
 			// 如果为空，赋一个空的list
 			chatSnapshotList = [];
 		}
-		
+
 		return chatSnapshotList;
 	},
-	
+
 	/**
 	 * 删除本地的聊天快照记录
 	 * @param {Object} myId
@@ -232,7 +294,7 @@ window.app = {
 	deleteUserChatSnapshot: function(myId, friendId) {
 		var me = this;
 		var chatKey = "chat-snapshot" + myId;
-		
+
 		// 从本地缓存获取聊天快照的list
 		var chatSnapshotListStr = plus.storage.getItem(chatKey);
 		var chatSnapshotList;
@@ -240,7 +302,7 @@ window.app = {
 			// 如果不为空
 			chatSnapshotList = JSON.parse(chatSnapshotListStr);
 			// 循环快照list，并且判断每个元素是否包含（匹配）friendId，如果匹配，则删除
-			for (var i = 0 ; i < chatSnapshotList.length ; i ++) {
+			for (var i = 0; i < chatSnapshotList.length; i++) {
 				if (chatSnapshotList[i].friendId == friendId) {
 					// 删除已经存在的friendId所对应的快照对象
 					chatSnapshotList.splice(i, 1);
@@ -251,10 +313,10 @@ window.app = {
 			// 如果为空，不做处理
 			return;
 		}
-		
+
 		plus.storage.setItem(chatKey, JSON.stringify(chatSnapshotList));
 	},
-	
+
 	/**
 	 * 标记未读消息为已读状态
 	 * @param {Object} myId
@@ -271,11 +333,11 @@ window.app = {
 			chatSnapshotList = JSON.parse(chatSnapshotListStr);
 			// 循环这个list，判断是否存在好友，比对friendId，
 			// 如果有，在list中的原有位置删除该 快照 对象，然后重新放入一个标记已读的快照对象
-			for (var i = 0 ; i < chatSnapshotList.length ; i ++) {
+			for (var i = 0; i < chatSnapshotList.length; i++) {
 				var item = chatSnapshotList[i];
 				if (item.friendId == friendId) {
-					item.isRead = true;		// 标记为已读
-					chatSnapshotList.splice(i, 1, item);	// 替换原有的快照
+					item.isRead = true; // 标记为已读
+					chatSnapshotList.splice(i, 1, item); // 替换原有的快照
 					break;
 				}
 			}
@@ -290,12 +352,12 @@ window.app = {
 	/**
 	 * 和后端的枚举对应
 	 */
-	CONNECT: 1, 	// 第一次(或重连)初始化连接
-	CHAT: 2, 		// 聊天消息
-	SIGNED: 3, 		// 消息签收
-	KEEPALIVE: 4, 	// 客户端保持心跳
-	PULL_FRIEND:5,	// 重新拉取好友
-	
+	CONNECT: 1, // 第一次(或重连)初始化连接
+	CHAT: 2, // 聊天消息
+	SIGNED: 3, // 消息签收
+	KEEPALIVE: 4, // 客户端保持心跳
+	PULL_FRIEND: 5, // 重新拉取好友
+
 	/**
 	 * 和后端的 ChatMsg 聊天模型对象保持一致
 	 * @param {Object} senderId
@@ -303,6 +365,7 @@ window.app = {
 	 * @param {Object} msg
 	 * @param {Object} msgId
 	 */
+<<<<<<< HEAD
 	CONNECTMsg: function(action, token){
 		this.cmd = action;
 		 this.data = {token:token};
@@ -321,20 +384,33 @@ window.app = {
 		// this.msgId = msgId;
 		this.cmd = action;
 		this.data = {type:type,groupId:groupId,message:message};
+=======
+	ChatMsg: function(senderId, receiverId, msg, msgId) {
+		this.senderId = senderId;
+		this.receiverId = receiverId;
+		this.msg = msg;
+		this.msgId = msgId;
+>>>>>>> d13b284ecd98ff4365d1f81367a58ad70597b8e1
 	},
-	
+
 	/**
 	 * 构建消息 DataContent 模型对象
 	 * @param {Object} action
 	 * @param {Object} chatMsg
 	 * @param {Object} extand
 	 */
+<<<<<<< HEAD
 	DataContent: function(action, chatMsg, extand){
 		this.cmd = action;
 		this.data = chatMsg;
+=======
+	DataContent: function(action, chatMsg, extand) {
+		this.action = action;
+		this.chatMsg = chatMsg;
+>>>>>>> d13b284ecd98ff4365d1f81367a58ad70597b8e1
 		this.extand = extand;
 	},
-	
+
 	/**
 	 * 单个聊天记录的对象
 	 * @param {Object} myId
@@ -342,13 +418,13 @@ window.app = {
 	 * @param {Object} msg
 	 * @param {Object} flag
 	 */
-	ChatHistory: function(myId, friendId, msg, flag){
+	ChatHistory: function(myId, friendId, msg, flag) {
 		this.myId = myId;
 		this.friendId = friendId;
 		this.msg = msg;
 		this.flag = flag;
 	},
-	
+
 	/**
 	 * 快照对象
 	 * @param {Object} myId
@@ -356,11 +432,11 @@ window.app = {
 	 * @param {Object} msg
 	 * @param {Object} isRead	用于判断消息是否已读还是未读
 	 */
-	ChatSnapshot: function(myId, friendId, msg, isRead){
+	ChatSnapshot: function(myId, friendId, msg, isRead) {
 		this.myId = myId;
 		this.friendId = friendId;
 		this.msg = msg;
 		this.isRead = isRead;
 	}
-	
+
 }

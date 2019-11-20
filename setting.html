@@ -63,7 +63,7 @@
 		<div class="mui-content" id="setting">
 			<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
-							账号 <span class="item-acount">3979555</span>
+							账号 <span class="item-acount" id="span_account"></span>
 					</li>
 					<li class="mui-table-view-cell">
 						<a class="mui-navigate-right" id="setphonebtn">
@@ -98,7 +98,16 @@
 		<script src="js/app.js"></script>
 		<script type="text/javascript">
 			mui.init()
+			function refreshUser(){
+				var user = app.getUserGlobalInfo();
+				var span_account = document.getElementById("span_account")
+				span_account.innerHTML = user.username
+			}
 			// mui.plusReady(function() {
+				
+				refreshUser()
+				
+				
 				// 用户退出
 				var exitbtn = document.getElementById("exitbtn");
 				exitbtn.addEventListener("tap", function() {

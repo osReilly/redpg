@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<style type="text/css">
+			.cdata {
+				text-align: center;
+				padding: 30px auto;
+			}
+
+			.cdata .text {
+				font-size: 0.75rem;
+				color: #999999;
+				margin-top: 1.25rem;
+			}
+
+			.mui-td,
+			.mui-th {
+				font-size: 12px;
+			}
+
+			.mui-table.mui-th {
+				background: #fff;
+				padding: 10px 0;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<a id="more" class="mui-icon mui-icon-more mui-pull-right" style="color: #fff;"></a>
+			<h1 class="mui-title title-color">钻石充值</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="mui-table mui-th">
+				<div class="mui-table-cell mui-text-center">
+					数量
+				</div>
+				<div class="mui-table-cell mui-text-center">
+					时间
+				</div>
+				<div class="mui-table-cell mui-text-center">
+					状态
+				</div>
+			</div>
+			<ul class="mui-table-view" id="datalist">
+
+
+			</ul>
+		</div>
+
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+
+			mui.plusReady(function() {
+				var user = app.getUserGlobalInfo();
+				console.log('token', user.token)
+				plus.nativeUI.showWaiting("请稍微...");
+				mui.ajax(app.serverUrl + "user/rechargeRecord", {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json',
+						'token': user.token
+					},
+					success: function(data) {
+						console.log('rechargereocord',JSON.stringify(data))
+						//服务器返回响应，根据响应结果，分析是否登录成功；
+						plus.nativeUI.closeWaiting();
+						if (data.success) {
+							var domParant = document.getElementById('datalist')
+							var list = data.data
+							var tmp = ''
+							if (list) {
+								for (var i = 0; i < list.length; i++) {
+
+									tmp += '<li class="mui-table-view-cell"><div class="mui-table mui-td">' +
+										'<div class="mui-table-cell mui-text-center">' + list[i].amount + '</div>' +
+										'<div class="mui-table-cell mui-text-center">' + (list[i].createTime) + '</div> ' +
+										'<div class="mui-table-cell mui-text-center">' + list[i].status + '</div>' +
+										'</div></li>'
+								}
+								domParant.innerHTML = tmp
+							} else {
+								domParant.innerHTML = '<li class="mui-table-view-cell no-paddingLR mui-text-center">' +
+									'<div class="cdata"><img src="image/1.png" width="90"><div class="text">-暂无相关数据-</div></div></li>'
+							}
+							cc.log(data)
+						} else {
+							app.showToast(data.msg, "error");
+							// document.getElementById('datalist').innerHTML =
+							// 	'<li class="mui-table-view-cell no-paddingLR mui-text-center">' +
+							// 	'<div class="cdata"><img src="image/1.png" width="90"><div class="text">-暂无相关数据-</div></div></li>'
+						}
+					}
+				});
+				mui('#more')[0].addEventListener("tap", function() {
+					var actionbuttons = [{
+						title: "充值"
+					}, {
+						title: "钻石明细"
+					}, {
+						title: "钻石说明"
+					}];
+					var actionstyle = {
+						title: "提示操作",
+						cancel: "取消",
+						buttons: actionbuttons
+					};
+					plus.nativeUI.actionSheet(actionstyle, function(e) {
+						console.log("User pressed: " + e.index,user.token);
+						if (e.index == '1') { //充值弹窗
+
+							mui.prompt('', '充值数量', null, ['取消', '确认'], function(e) {
+								console.log('prompt', JSON.stringify(e))
+								if (e.index == '1') {
+
+									var params = "user/recharge?amount=" + e.value
+									mui.ajax(app.serverUrl + params, {
+										dataType: 'json', //服务器返回json格式数据
+										type: 'post', //HTTP请求类型
+										timeout: 10000, //超时时间设置为10秒；
+										headers: {
+											'Content-Type': 'application/json',
+											'token':user.token
+										},
+										success: function(data) {
+											if (data.success) {
+												// 页面跳转
+												mui.openWindow('rechargeDescription.html', 'rechargeDescription.html')
+											} else {
+												console.error(data.msg)
+												app.showToast(data.msg, "error");
+											}
+										}
+									});
+								}
+							}, 'div')
+
+						} else if (e.index == '2') {
+							mui.openWindow('diamondRecord.html', 'diamondRecord.html')
+						} else if (e.index == '3') {
+							mui.openWindow('rechargeDescription.html', 'rechargeDescription.html')
+
+						}
+					});
+				})
+			});
+		</script>
+
+	</body>
+
+</html>
