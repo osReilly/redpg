@@ -3,13 +3,7 @@ window.app = {
 	/**
 	 * netty服务后端发布的url地址
 	 */
-<<<<<<< HEAD
-	nettyServerUrl: 'ws://47.106.228.0:8088/ws',
-	
-=======
 	nettyServerUrl: 'ws://192.168.1.3:8088/ws',
-
->>>>>>> d13b284ecd98ff4365d1f81367a58ad70597b8e1
 	/**
 	 * 后端服务发布的url地址
 	 */
@@ -39,9 +33,6 @@ window.app = {
 	 * @param {Object} type
 	 */
 	showToast: function(msg, type) {
-<<<<<<< HEAD
-		plus?plus.nativeUI.toast(msg, {icon: "image/" + type + ".png", verticalAlign: "center"}):mui.toast(msg)	
-=======
 		if (plus) plus.nativeUI.toast(msg, {
 			icon: "image/" + type + ".png",
 			verticalAlign: "center"
@@ -365,7 +356,6 @@ window.app = {
 	 * @param {Object} msg
 	 * @param {Object} msgId
 	 */
-<<<<<<< HEAD
 	CONNECTMsg: function(action, token){
 		this.cmd = action;
 		 this.data = {token:token};
@@ -384,13 +374,6 @@ window.app = {
 		// this.msgId = msgId;
 		this.cmd = action;
 		this.data = {type:type,groupId:groupId,message:message};
-=======
-	ChatMsg: function(senderId, receiverId, msg, msgId) {
-		this.senderId = senderId;
-		this.receiverId = receiverId;
-		this.msg = msg;
-		this.msgId = msgId;
->>>>>>> d13b284ecd98ff4365d1f81367a58ad70597b8e1
 	},
 
 	/**
@@ -399,15 +382,9 @@ window.app = {
 	 * @param {Object} chatMsg
 	 * @param {Object} extand
 	 */
-<<<<<<< HEAD
 	DataContent: function(action, chatMsg, extand){
 		this.cmd = action;
 		this.data = chatMsg;
-=======
-	DataContent: function(action, chatMsg, extand) {
-		this.action = action;
-		this.chatMsg = chatMsg;
->>>>>>> d13b284ecd98ff4365d1f81367a58ad70597b8e1
 		this.extand = extand;
 	},
 
