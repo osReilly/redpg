@@ -88,7 +88,6 @@ window.app = {
 			}
 			return false
 		});
->>>>>>> d13b284ecd98ff4365d1f81367a58ad70597b8e1
 	},
 	/**
 	 * 保存用户的全局对象
