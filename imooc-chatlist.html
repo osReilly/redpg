@@ -52,7 +52,7 @@
 			            <p class="mui-ellipsis">这里是聊天内容...</p>
 		            </div>
 			    </li> -->
-				<li friendUserId="001" friendNickname="bob" friendFaceImage="image/face-default-cat.png" class="chat-with-friend mui-table-view-cell mui-media">
+<!-- 				<li friendUserId="001" friendNickname="bob" friendFaceImage="image/face-default-cat.png" class="chat-with-friend mui-table-view-cell mui-media">
 					<div class="mui-slider-right mui-disabled">
 						<a id="link_delChatRecord" friendUserId="001" class="mui-btn mui-btn-red">删除</a>
 					</div>
@@ -61,7 +61,7 @@
 						测试title
 						<p class="mui-ellipsis">50-100 | 0包/1.0</p>
 					</div>
-				</li>
+				</li> -->
 				<!-- <li class="mui-table-view-cell mui-media">
 		            <div class="mui-media-body">
 			            <img class="mui-media-object mui-pull-left" src="image/face-default-cat.png"/>
@@ -104,7 +104,7 @@
 			mui.ready(function() {
 
 				// 获取用户全局对象
-				// var user = app.getUserGlobalInfo();
+				var user = app.getUserGlobalInfo();
 
 				// 加载好友请求记录
 				// var thisWebview = plus.webview.currentWebview();
@@ -207,7 +207,7 @@
 				wsopen: function() {
 					console.log("websocket连接已建立...");
 					var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0In0.m5bgpAHEMrSz3Jhs3RJ81XrG_aggabfo9SWQeYkixTE"
-					var connetData = new app.DataContent(app.CONNECT, {token:token});
+					var connetData = new app.DataContent(app.CONNECT, {token:app.getUserGlobalInfo().token});
 					console.log('connetData',connetData)
 					// 发送心跳
 					CHAT.chat(JSON.stringify(connetData));
@@ -230,7 +230,7 @@
 
 					// 转换DataContent为对象
 					var dataContent = JSON.parse(e.data);
-					
+					console.log("接受到消息dataContent：" + JSON.stringify(dataContent));
 					var action = dataContent.cmd;
 					if(action === app.CONNECT) {
 						var groups = dataContent.data.groups
@@ -240,23 +240,34 @@
 						fetchContactList();
 						return false;
 					}
+					if(action === app.CHAT){
+						console.log('app.chat----',dataContent)
+						var chatWebview = plus.webview.getWebviewById("chatting-" + dataContent.data.groupId);
+						var isRead = true; // 设置消息的默认状态为已读
+						if (chatWebview != null) {
+							chatWebview.evalJS("receiveMsg('" + msg + "')");
+							chatWebview.evalJS("resizeScreen()");
+						} else {
+							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
+						}				
+					}
 					
 					// 如果不是重新拉取好友列表，则获取聊天消息模型，渲染接收到的聊天记录
 					// var chatMsg = dataContent.chatMsg;
-					// var msg = chatMsg.msg;
+					var msg = dataContent.message;
 					// var friendUserId = chatMsg.senderId;
 					// var myId = chatMsg.receiverId;
 
-					// // 调用聊天webview的receiveMsg方法
-					// //					var chatWebview = plus.webview.getWebviewById("chatting-180718GA2ZM9N5S8");
-					// var chatWebview = plus.webview.getWebviewById("chatting-" + friendUserId);
-					// var isRead = true; // 设置消息的默认状态为已读
-					// if (chatWebview != null) {
-					// 	chatWebview.evalJS("receiveMsg('" + msg + "')");
-					// 	chatWebview.evalJS("resizeScreen()");
-					// } else {
-					// 	isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
-					// }
+					// 调用聊天webview的receiveMsg方法
+					//					var chatWebview = plus.webview.getWebviewById("chatting-180718GA2ZM9N5S8");
+					var chatWebview = plus.webview.getWebviewById("chatting-" + dataContent.groupId);
+					var isRead = true; // 设置消息的默认状态为已读
+					if (chatWebview != null) {
+						chatWebview.evalJS("receiveMsg('" + msg + "')");
+						chatWebview.evalJS("resizeScreen()");
+					} else {
+						isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
+					}
 
 					// // 接受到消息之后，对消息记录进行签收
 					// var dataContentSign = new app.DataContent(app.SIGNED, null, chatMsg.msgId);

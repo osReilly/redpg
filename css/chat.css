@@ -1,4 +1,4 @@
-﻿/*图片气泡*/
+/*图片气泡*/
 .friend_lists {
 	margin: 0 50px 0px 10px;
 	position: relative;
@@ -115,7 +115,7 @@ footer {
 	left: 0px;
 	bottom: 0px;
 	overflow: hidden;
-	padding: 0px 65px 0 10px;
+	padding: 0px 145px 0 10px;
 	background-color: #fafafa;
 }
 
@@ -133,7 +133,7 @@ footer {
 
 .footer-right {
 	position: absolute;
-	width: 60px;
+	width: 142px;
 	height: 50px;
 	right: 0px;
 	bottom: 0px;

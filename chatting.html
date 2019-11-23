@@ -60,6 +60,7 @@
 			</div>
 			<label for="" class="footer-right">
 				<button type="button" class="mui-btn mui-btn-gray" id="send">发送</button>
+				<button type="button" class="mui-btn mui-btn-gray" id="sendrd">发红包</button>
 			</label>
 		</footer>
 		
@@ -168,7 +169,7 @@
 						
 						// 调用websocket 发送消息到netty后端
 						var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
-						wsWebview.evalJS("CHAT.chat('" + JSON.stringify(dataContent) + "')");
+						wsWebview.evalJS("CHAT.chat('" + JSON.stringify(chatMsg) + "')");
 //						wsWebview.evalJS("CHAT.chat('" + msg_text_val + "')");
 						
 						// 保存聊天历史记录到本地缓存
@@ -180,7 +181,7 @@
 				
 				// 接受消息
 				function receiveMsg(msg) {
-					
+					console.log('receiveMsg',msg)
 					var msgHtml = '<div class="friend_lists">' +
 										'<div class="header_img">' +
 											'<img src="' + app.imgServerUrl + friendFaceImage + '" width="40px" height="40px" />' +
