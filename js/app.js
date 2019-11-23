@@ -382,7 +382,7 @@ window.app = {
 	 * @param {Object} extand
 	 */
 	DataContent: function(action, chatMsg, extand){
-		console.log('DataContent',action, JSON.stringify(chatMsg), JSON.stringify(extand))
+		// console.log('DataContent',action, JSON.stringify(chatMsg), JSON.stringify(extand))
 		this.cmd = action;
 		this.data = chatMsg;
 		this.extand = extand;
