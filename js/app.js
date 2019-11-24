@@ -224,7 +224,7 @@ window.app = {
 	 * @param {Object} msg
 	 * @param {Object} isRead
 	 */
-	saveUserChatSnapshot: function(myId, friendId, msg, isRead) {
+	saveUserChatSnapshot: function(myId, friendId,nickname, msg, isRead) {
 		var me = this;
 		var chatKey = "chat-snapshot" + myId;
 
@@ -248,7 +248,7 @@ window.app = {
 		}
 
 		// 构建聊天快照对象
-		var singleMsg = new me.ChatSnapshot(myId, friendId, msg, isRead);
+		var singleMsg = new me.ChatSnapshot(myId, friendId,nickname, msg, isRead);
 
 		// 向list中追加快照对象
 		chatSnapshotList.unshift(singleMsg);
@@ -409,10 +409,11 @@ window.app = {
 	 * @param {Object} msg
 	 * @param {Object} isRead	用于判断消息是否已读还是未读
 	 */
-	ChatSnapshot: function(myId, friendId, msg, isRead) {
+	ChatSnapshot: function(myId, friendId,nickname, msg, isRead) {
 		this.myId = myId;
 		this.friendId = friendId;
 		this.msg = msg;
+		this.nickname = nickname
 		this.isRead = isRead;
 	}
 

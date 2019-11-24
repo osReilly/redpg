@@ -42,54 +42,7 @@
 			</ul> -->
 
 			<ul id="ul_chatSnapshot" class="mui-table-view">
-				<!-- 				<li class="mui-table-view-cell mui-media">
-					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-red">删除</a>
-					</div>
-		            <div class="mui-slider-handle mui-media-body">
-			            <img class="mui-media-object mui-pull-left" src="image/face-default-cat.png"/>
-			            	<span class="red-point">慕课网</span>
-			            <p class="mui-ellipsis">这里是聊天内容...</p>
-		            </div>
-			    </li> -->
-				<!-- 				<li friendUserId="001" friendNickname="bob" friendFaceImage="image/face-default-cat.png" class="chat-with-friend mui-table-view-cell mui-media">
-					<div class="mui-slider-right mui-disabled">
-						<a id="link_delChatRecord" friendUserId="001" class="mui-btn mui-btn-red">删除</a>
-					</div>
-					<div class="mui-slider-handle mui-media-body ">
-						<img class="mui-media-object mui-pull-left" src="image/face-default-cat.png" />
-						测试title
-						<p class="mui-ellipsis">50-100 | 0包/1.0</p>
-					</div>
-				</li> -->
-				<!-- <li class="mui-table-view-cell mui-media">
-		            <div class="mui-media-body">
-			            <img class="mui-media-object mui-pull-left" src="image/face-default-cat.png"/>
-			            	甲
-			            <p class="mui-ellipsis">这里是聊天内容...</p>
-		            </div>
-			    </li>
-			    <li class="mui-table-view-cell mui-media">
-		            <div class="mui-media-body">
-			            <img class="mui-media-object mui-pull-left" src="image/face-default-cat.png"/>
-			            	乙
-			            <p class="mui-ellipsis">这里是聊天内容...</p>
-		            </div>
-			    </li>
-			    <li class="mui-table-view-cell mui-media">
-		            <div class="mui-media-body">
-			            <img class="mui-media-object mui-pull-left" src="image/face-default-cat.png"/>
-			            	丙
-			            <p class="mui-ellipsis">这里是聊天内容...</p>
-		            </div>
-			    </li>
-			    <li class="mui-table-view-cell mui-media">
-		            <div class="mui-media-body">
-			            <img class="mui-media-object mui-pull-left" src="image/face-default-cat.png"/>
-			            	丁
-			            <p class="mui-ellipsis">这里是聊天内容...</p>
-		            </div>
-			    </li> -->
+				
 			</ul>
 		</div>
 
@@ -194,8 +147,8 @@
 						CHAT.socket.send(msg);
 					} else {
 						// 重连websocket
-						// CHAT.init();
-						// setTimeout("CHAT.reChat('" + msg + "')", "1000");
+						CHAT.init();
+						setTimeout("CHAT.reChat('" + msg + "')", "1000");
 					}
 					// 渲染快照列表进行展示
 					// loadingChatSnapshot();
@@ -225,7 +178,7 @@
 					// fetchUnReadMsg();
 
 					// 定时发送心跳
-					// setInterval("CHAT.keepalive()", 10000);
+					setInterval("CHAT.keepalive()", 10000);
 				},
 				wsmessage: function(e) {
 					console.log("接受到消息：" + e.data);
@@ -236,22 +189,23 @@
 					console.log("接受到消息dataContent：" + JSON.stringify(dataContent));
 					var action = dataContent.cmd;
 					var msg = dataContent.data.message;
+					var nickname = dataContent.data.userGroupName;
 					if (action === app.CONNECT) {
 						var groups = dataContent.data.groups
 						initLists(groups)
 					}
-					if(action === app.GROUP_UPDATE){
-						
-						var groupinfo = dataContent.data
-						addLists(groupinfo)
-					}
+					// if (action === app.GROUP_UPDATE) {
+
+					// 	var groupinfo = dataContent.data
+					// 	addLists(groupinfo)
+					// }
 					if (action === app.CHAT) {
 						console.log('app.chat----', dataContent)
 						var chatWebview = plus.webview.getWebviewById("chatting-" + dataContent.data.groupId);
 						var isRead = true; // 设置消息的默认状态为已读
 						if (chatWebview != null) {
 							if (dataContent.data.userId == app.getUserGlobalInfo().id) return;
-							chatWebview.evalJS("receiveMsg('" + msg + "')");
+							chatWebview.evalJS("receiveMsg('" + msg + "','" + nickname + "')");
 							chatWebview.evalJS("resizeScreen()");
 						} else {
 							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
@@ -325,13 +279,13 @@
 					var chatItem = chatSnapshotList[i];
 
 					var groupId = chatItem.id;
-					var groupMemberList = chatItem.groupMemberList
+					var groupMemberList = chatItem.top4MemberAvatarList
+					debugger
 					//头像
 					var itemp = ''
-					for (var i = 0; i < groupMemberList.length; i++) {
-						var item = groupMemberList[i];
-						itemp += '<img class=" mui-pull-left" src="' + item.avatar + '"/><img class=" mui-pull-left" src="' + item.avatar +
-							'"/><img class=" mui-pull-left" src="' + item.avatar + '"/>'
+					for (var k = 0; k < groupMemberList.length; k++) {
+						var item = groupMemberList[k];
+						itemp += '<img class=" mui-pull-left" src="' + item + '" style="width:40px"/>'
 					}
 					// // 根据friendId从本地联系人列表的缓存中拿到相关信息
 					// var friend = app.getFriendFromContactList(friendId);
@@ -359,51 +313,49 @@
 					ul_chatSnapshot.insertAdjacentHTML('beforeend', chatItemHtml);
 				}
 			}
+
 			function addLists(groupinfo) {
 				var chatItemHtml = "";
 				var ul_chatSnapshot = document.getElementById("ul_chatSnapshot");
 				var ulchildren = ul_chatSnapshot.children
-				for(var n = 0;n<ulchildren.length;n++){
+				for (var n = 0; n < ulchildren.length; n++) {
 					var ngroupid = ulchildren[n].getAttribute('groupId')
-					debugger
-					if(ngroupid&&groupinfo.groupId === ngroupid) ul_chatSnapshot.removeChild(ulchildren[n])
+					if (ngroupid && groupinfo.groupId === ngroupid) ul_chatSnapshot.removeChild(ulchildren[n])
 				}
-				// ul_chatSnapshot.innerHTML = "";
-					var chatItem = groupinfo;
-					var groupId = chatItem.id;
-					var groupMemberList = chatItem.groupMemberList
-					//头像
-					var itemp = ''
-					for (var i = 0; i < groupMemberList.length; i++) {
-						var item = groupMemberList[i];
-						itemp += '<img class=" mui-pull-left" src="' + item.avatar + '"/><img class=" mui-pull-left" src="' + item.avatar +
-							'"/><img class=" mui-pull-left" src="' + item.avatar + '"/>'
-					}
-					// // 根据friendId从本地联系人列表的缓存中拿到相关信息
-					// var friend = app.getFriendFromContactList(friendId);
-			
-					// 判断消息的已读或未读状态
-					var isRead = chatItem.isRead;
-					var readHtmlBefore = '';
-					var readHtmlAfter = '';
-			
-					if (!isRead) {
-						readHtmlBefore = '<span class="red-point">';
-						readHtmlAfter = '</span>';
-					}
-					chatItemHtml = '<li groupId="' + groupId + '" groupName="' + chatItem.displayName +
-						'" class="chat-with-friend mui-table-view-cell mui-media">' +
-						'<div class="mui-slider-right mui-disabled">' +
-						'<a id="link_delChatRecord" groupId="' + groupId + '" class="mui-btn mui-btn-red">删除</a>' +
-						'</div>' +
-						'<div class="mui-slider-handle mui-media-body "><div class="mui-media-object mui-pull-left" style="border: 1px solid #ccc;">' +
-						itemp + '</div>' +
-						readHtmlBefore + chatItem.displayName + readHtmlAfter +
-						'<p class="mui-ellipsis">' + chatItem.name + '</p>' +
-						'</div>' +
-						'</li>';
-					ul_chatSnapshot.insertAdjacentHTML('beforeend', chatItemHtml);
+				var chatItem = groupinfo;
+				var groupId = chatItem.id;
+				var groupMemberList = chatItem.top4MemberAvatarList
+				//头像
+				var itemp = ''
+				for (var i = 0; i < groupMemberList.length; i++) {
+					var item = groupMemberList[i];
+					itemp += '<img class=" mui-pull-left" src="' + item + '" style="width:40px"/>'
 				}
+				// // 根据friendId从本地联系人列表的缓存中拿到相关信息
+				// var friend = app.getFriendFromContactList(friendId);
+
+				// 判断消息的已读或未读状态
+				var isRead = chatItem.isRead;
+				var readHtmlBefore = '';
+				var readHtmlAfter = '';
+
+				if (!isRead) {
+					readHtmlBefore = '<span class="red-point">';
+					readHtmlAfter = '</span>';
+				}
+				chatItemHtml = '<li groupId="' + groupId + '" groupName="' + chatItem.displayName +
+					'" class="chat-with-friend mui-table-view-cell mui-media">' +
+					'<div class="mui-slider-right mui-disabled">' +
+					'<a id="link_delChatRecord" groupId="' + groupId + '" class="mui-btn mui-btn-red">删除</a>' +
+					'</div>' +
+					'<div class="mui-slider-handle mui-media-body "><div class="mui-media-object mui-pull-left" style="border: 1px solid #ccc;">' +
+					itemp + '</div>' +
+					readHtmlBefore + chatItem.displayName + readHtmlAfter +
+					'<p class="mui-ellipsis">' + chatItem.name + '</p>' +
+					'</div>' +
+					'</li>';
+				ul_chatSnapshot.insertAdjacentHTML('beforeend', chatItemHtml);
+			}
 			// 每次重连后获取服务器的未签收消息
 			// function fetchUnReadMsg() {
 			// 	var user = app.getUserGlobalInfo();

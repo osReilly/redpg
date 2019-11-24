@@ -24,8 +24,8 @@
 	top: 5px;
 	right: 0px;
 }
-
-
+.msg-right-name{margin:12px 60px 0 0;}
+.msg-left-name{margin:12px  0 0 60px;}
 /*背景气泡*/
 .msg-left-white {
 	background-color: #FFFFFF;

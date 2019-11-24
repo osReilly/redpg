@@ -138,6 +138,14 @@
 									mui.toast(data.msg)
 									// 页面跳转
 									// mui.openWindow("imooc-chatlist.html", "imooc-chatlist.html");
+									console.log('app.chat----', dataContent)
+									// var chatlist = plus.webview.getWebviewById("imooc-chatlist.html");
+									// if (chatlist != null) {
+									// 	if (dataContent.data.userId == app.getUserGlobalInfo().id) return;
+									// 	chatWebview.evalJS("receiveMsg('" + msg + "')");
+									// 	chatWebview.evalJS("resizeScreen()");
+									// } else {
+									// addLists
 									mui.openWindow("index.html", "index.html");
 								} else {
 									app.showToast(data.msg, "error");
