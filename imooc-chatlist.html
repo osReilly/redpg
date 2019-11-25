@@ -147,8 +147,8 @@
 						CHAT.socket.send(msg);
 					} else {
 						// 重连websocket
-						CHAT.init();
-						setTimeout("CHAT.reChat('" + msg + "')", "1000");
+						// CHAT.init();
+						// setTimeout("CHAT.reChat('" + msg + "')", "1000");
 					}
 					// 渲染快照列表进行展示
 					// loadingChatSnapshot();
@@ -185,10 +185,12 @@
 
 					// 转换DataContent为对象
 					var dataContent = JSON.parse(e.data);
-
+					var flag = dataContent.success
 					console.log("接受到消息dataContent：" + JSON.stringify(dataContent));
+					if(!flag) mui.toast(dataContent.msg);return;
 					var action = dataContent.cmd;
 					var msg = dataContent.data.message;
+					
 					var nickname = dataContent.data.userGroupName;
 					if (action === app.CONNECT) {
 						var groups = dataContent.data.groups
@@ -203,9 +205,10 @@
 						console.log('app.chat----', dataContent)
 						var chatWebview = plus.webview.getWebviewById("chatting-" + dataContent.data.groupId);
 						var isRead = true; // 设置消息的默认状态为已读
+						var type = dataContent.data.type
 						if (chatWebview != null) {
 							if (dataContent.data.userId == app.getUserGlobalInfo().id) return;
-							chatWebview.evalJS("receiveMsg('" + msg + "','" + nickname + "')");
+							chatWebview.evalJS("receiveMsg('" + msg + "','" + nickname + "','" + type + "')");
 							chatWebview.evalJS("resizeScreen()");
 						} else {
 							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态

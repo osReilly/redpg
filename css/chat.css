@@ -1,6 +1,6 @@
 /*图片气泡*/
 .friend_lists {
-	margin: 0 50px 0px 10px;
+	margin: 10px 50px 0px 10px;
 	position: relative;
 }
 
@@ -11,7 +11,7 @@
 
 .me_lists {
 	position: relative;
-	margin: 0 10px 0px 50px;
+	margin: 10px 10px 0px 50px;
 }
 
 .me_lists .msg {
@@ -57,7 +57,20 @@
 	border-style: solid;
 	content: "";
 }
-
+.msg-redpackage{
+	width: 220px;
+	height: 108px;
+	background: url(../image/red-pack-bg.png);
+	background-size: cover;
+	color:#fff;
+	position: relative;
+}
+.msg-redpackage.left{right:-40px}
+.msg-redpackage.right{right:-50px}
+.redimg{float:left;margin:8px 8px;}
+.msg-name{padding: 12px 4px;font-size: 20px;}
+.msg-desc{font-size: 14px;}
+.msg-gname{position: absolute;bottom:-10px;background: #ddd;left: 0;right:0;padding:4px}
 .msg-wrapper.right p:before {
 	left: -12px;
 	border-color: transparent #FFFFFF;

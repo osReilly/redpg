@@ -374,6 +374,25 @@ window.app = {
 		this.cmd = action;
 		this.data = {type:type,groupId:groupId,message:message};
 	},
+	
+	/**
+	 * {
+    "cmd": 2,
+    "data": {
+        "type": 3,
+        "groupId": 9,
+        "money": 100,
+        "paymentCode": 123456,
+        "mine": 0
+    }
+}
+	 */
+	
+	ChatRedPackage: function(action,type, groupId, money,paymentCode,mine){
+		this.cmd = action;
+		this.data = {type:type,groupId:groupId,money:money,paymentCode:paymentCode,mine:mine};
+	},
+	
 
 	/**
 	 * 构建消息 DataContent 模型对象

@@ -41,8 +41,34 @@
 						<div class="msg-left-name">名字</div>
 						<p class="msg-left-white">晚上过来吃饭？</p>
 					</div>
-				</div>
 
+				</div>
+				<div class="friend_lists">
+					<div class="header_img">
+						<img src="image/face-default-cat.png" width="40px" height="40px" />
+					</div>
+					<div class="msg-redpackage right">
+						<div class="redimg">
+							<img src="image/redpeick.png">
+						</div>
+						<div class="msg-name">100-2</div>
+						<div class="msg-desc">领取红包</div>
+						<p class="msg-gname">扫雷红包游戏</p>
+					</div>
+				</div>
+				<div class="me_lists">
+					<div class="header_img">
+						<img src="image/face-default-cat.png" width="40px" height="40px" />
+					</div>
+					<div class="msg-redpackage left">
+						<div class="redimg">
+							<img src="image/redpeick.png">
+						</div>
+						<div class="msg-name">100-2</div>
+						<div class="msg-desc">领取红包</div>
+						<p class="msg-gname">扫雷红包游戏</p>
+					</div>
+				</div>
 				<div class="me_lists">
 					<div class="header_img">
 						<img src="image/face-default-cat.png" width="40px" height="40px" />
@@ -155,7 +181,23 @@
 					resizeScreen();
 					document.getElementById("msg-outter").style.paddingBottom = "50px";
 				});
+				// 发送消息按钮的事件绑定
+				document.getElementById('sendrd').addEventListener("tap", function() {
 
+					// 发送之前判断网络的状态
+					var connectionStatus = plus.networkinfo.getCurrentType();
+					if (connectionStatus == 0 || connectionStatus == 1) {
+						app.showToast("请打开网络连接...", "error");
+						return;
+					}
+					mui.openWindow({
+						url: "redpackhandler.html",
+						id: "redpackhandler.html", // 每个朋友的聊天页面都是唯一对应的
+						extras: {
+							groupId: friendUserId
+						}
+					});
+				});
 				// 发送消息按钮的事件绑定
 				send.addEventListener("tap", function() {
 
@@ -175,7 +217,7 @@
 					}
 
 					// 发送消息, 渲染消息的html到msg div之下
-					sendMsg(me.avatar,me.nickname, msg_text_val);
+					sendMsg(me.avatar, me.nickname, msg_text_val);
 					// 情况消息文本框中的内容
 					msg_text.value = "";
 					// 发送消息完毕之后，把发送按钮的颜色改为灰白色
@@ -199,17 +241,34 @@
 			});
 
 			// 接受消息
-			function receiveMsg(msg,nickname) {
-				console.log('receiveMsg', msg,nickname)
-				var msgHtml = '<div class="friend_lists">' +
-					'<div class="header_img">' +
-					'<img src="' + app.imgServerUrl + friendFaceImage + '" width="40px" height="40px" />' +
+			function receiveMsg(msg, nickname, type) {
+				console.log('receiveMsg', msg, nickname)
+				var msgHtml = ''
+				if (parseInt(type) === 3) {
+					msgHtml = '<div class="friend_lists">' + '
+					'<div class="header_img"><img src="'+friendFaceImage+'" width="40px" height="40px" /></div>' +
+					'<div class="msg-redpackage right">' +
+					'<div class="redimg">' +
+					'<img src="image/redpeick.png">' +
 					'</div>' +
-					'<div class="msg-wrapper right">' +
-					'<div class="msg-left-name">' + nickname + '</div>' +
-					'<p class="msg-left-white">' + msg + '</p>' +
+					'<div class="msg-name">'+msg+'</div>' +
+					'<div class="msg-desc">领取红包</div>' +
+					'<p class="msg-gname">扫雷红包游戏</p>' +
 					'</div>' +
 					'</div>';
+
+				} else {
+					msgHtml = '<div class="friend_lists">' +
+						'<div class="header_img">' +
+						'<img src="' + friendFaceImage + '" width="40px" height="40px" />' +
+						'</div>' +
+						'<div class="msg-wrapper right">' +
+						'<div class="msg-left-name">' + nickname + '</div>' +
+						'<p class="msg-left-white">' + msg + '</p>' +
+						'</div>' +
+						'</div>';
+
+				}
 
 				var msg_list = document.getElementById("msg");
 				msg_list.insertAdjacentHTML("beforeend", msgHtml);
@@ -218,14 +277,14 @@
 			}
 
 			// 发送消息
-			function sendMsg(faceImg,name, msg) {
+			function sendMsg(faceImg, name, msg) {
 				debugger
 				var msgHtml = '<div class="me_lists">' +
 					'<div class="header_img">' +
 					'<img src="' + faceImg + '" width="40px" height="40px" />' +
 					'</div>' +
 					'<div class="msg-wrapper left">' +
-					'<div class="msg-right-name">'+name+'</div>' +
+					'<div class="msg-right-name">' + name + '</div>' +
 					'<p class="msg-right-green">' + msg + '</p>' +
 					'</div>' +
 					'</div>';
