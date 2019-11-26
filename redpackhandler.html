@@ -53,10 +53,7 @@
 			.three-row .mui-input-clear~.mui-icon-clear {
 				right: 90px;
 			}
-
-			#form .mui-input-right {
-				text-align: right;
-			}
+			#form .mui-input-clear{text-align: right;}
 		</style>
 	</head>
 
@@ -69,15 +66,15 @@
 			<form class="mui-input-group custorm-form" id="form">
 				<div class="mui-input-row">
 					<label>红包个数</label>
-					<input type="number" id="rednum" class="mui-input-right" placeholder="请输入红包个数" readonly="readonly">
+					<input type="number" id="rednum" class="mui-input-clear" placeholder="请输入红包个数" readonly="readonly">
 				</div>
 				<div class="mui-input-row">
 					<label>总金额</label>
-					<input type="number" id="money" class="mui-input-right" placeholder="请输入总金额">
+					<input type="number" id="money" class="mui-input-clear" placeholder="请输入总金额">
 				</div>
 				<div class="mui-input-row">
 					<label>雷数</label>
-					<input type="number" id="mine" class="mui-input-right" maxlength="1" placeholder="请输入雷数">
+					<input type="number" id="mine" class="mui-input-clear" placeholder="请输入雷数">
 				</div>
 			</form>
 			<div class="mui-content-padded">
@@ -92,53 +89,44 @@
 			mui.init()
 			mui.plusReady(function() {
 				var user = app.getUserGlobalInfo();
-				var groupid = plus.webview.currentWebview().groupId
-				var rednum = document.getElementById('rednum')
-				debugger
-				mui.ajax(app.serverUrl + 'group/getGamePlay?groupId=' + groupid, {
-					data: {},
-					dataType: 'json', //服务器返回json格式数据
-					type: 'post', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒；
-					headers: {
-						'Content-Type': 'application/json',
-						'token': user.token
-					},
-					success: function(data) {
-						console.log(JSON.stringify(data));
-						if (data.success) {
-							rednum.value = data.data.redEnvelopeNum
-						} else {
-							rednum.value = 0
-						}
-					}
-				});
+					var groupid = plus.webview.currentWebview().groupId
+					var rednum = document.getElementById('rednum')
+						debugger
+						mui.ajax(app.serverUrl + 'group/getGamePlay?groupId='+groupid, {
+							data: {
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json',
+								'token': user.token
+							},
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								if (data.success) {
+									rednum.value = data.data.redEnvelopeNum
+								} else {
+									rednum.value = 0
+								}
+							}
+						});
 				var submitbtn = document.getElementById("submitbtn");
 				var money = document.getElementById("money");
 				var mine = document.getElementById("mine")
 				var paymentCode = 123456
-				mine.addEventListener("input", function(e) {
-					var value = event.target.value
-					if (value && value.length >= 1) event.target.value = value.slice(0, 1)
-				})
 				submitbtn.addEventListener("tap", function(e) {
-					if (!app.isNotNull(money.value)) {
-						money.focus();
-						mui.toast(money.getAttribute('placeholder'))
-					} else if (!app.isNotNull(mine.value)) {
-						mine.focus();
-						mui.toast(mine.getAttribute('placeholder'))
-					} else {
-						var chatMsg = new app.ChatRedPackage(app.CHAT, 3, groupid, money.value, paymentCode, mine.value);
-						// 调用websocket 发送消息到netty后端
-
-						var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
-						wsWebview.evalJS("CHAT.chat('" + JSON.stringify(chatMsg) + "')");
-						e.preventDefault()
-						mui.back()
-					}
+					//action,type, groupId, money,paymentCode,mine
+				var chatMsg = new app.ChatRedPackage(app.CHAT, 3,groupid, money.value, paymentCode,mine.value);
+				// 调用websocket 发送消息到netty后端
+				debugger
+				
+				var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
+				wsWebview.evalJS("CHAT.chat('" + JSON.stringify(chatMsg) + "')");
+					e.preventDefault()
+					mui.back()
 				});
-
+				
 			});
 		</script>
 	</body>

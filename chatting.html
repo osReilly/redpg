@@ -18,6 +18,29 @@
 				-webkit-touch-callout: none;
 				-webkit-user-select: none;
 			}
+			.mui-popover{  
+			position: fixed;  
+			width: 80%;  
+			height: 70%;  
+			border-radius: 0;  
+			left: 50%;  
+			top: 50%;  
+			margin: 0 auto;  
+			z-index: 9999;  
+			background-color: #fff;  
+			-webkit-transform: translateX(-50%) translateY(-50%);  
+			 -moz-transform: translateX(-50%) translateY(-50%);  
+			 -ms-transform: translateX(-50%) translateY(-50%);  
+			 transform: translateX(-50%) translateY(-50%);  
+			}
+			.redpackgePopver{background:url(image/88.png) 0 0/cover;height: 320px;}
+			.popver-content{color:#fff;padding-top: 50px;position: relative;height: 320px;}
+			.popver-content p{color: #fff;font-size: 18px;}
+			.popver-content .redHead{border-radius: 50%;}
+			.popver-content a{color: #fff;position: absolute;bottom:8px;left:0;right:0}
+			.money {position: absolute;width:100px;height:100px;
+			bottom:10px;left:0;right:0;margin:0 auto;background: url('image/money.png') no-repeat center;background-size: contain;}
+			#detailbtn{display: none;}
 		</style>
 	</head>
 
@@ -80,10 +103,16 @@
 				</div>
 
 			</div>
-			<div id="popover" class="mui-popover" style="height: 250px;">
-						<div class="mui-popover-arrow"></div>
-						<div>我是自定义位置弹出层</div>
-					</div>
+			<div id="popover" class="redpackgePopver mui-popover" style="height: 350px;">
+				<a href="#popover"><img src="image/clear.png" width="20px"></a>
+				<div class="mui-text-center popver-content">
+					<img src="image/3.png" class="redHead" id="redHead">
+					<p class="redname" id="redname">名字</p>
+					<p class="redstatus" id="redstatus">红包过期</p>
+					<div class="money" id="moneybtn"></div>
+					<a href="#" id="detailbtn">查看大家的手气>></a>
+				</div>
+			</div>
 		</div>
 
 		<footer>
@@ -111,6 +140,7 @@
 			}, {
 				title: '群主设置'
 			}];
+			var redEnvelopeId = 0
 			mui.plusReady(function() {
 				document.getElementById('more').addEventListener("tap", function(e) {
 					console.log('more', e)
@@ -185,6 +215,27 @@
 					resizeScreen();
 					document.getElementById("msg-outter").style.paddingBottom = "50px";
 				});
+				document.getElementById('moneybtn').addEventListener("tap", function() {
+
+
+					var data = new app.getRedPackage(app.READY_REDPACKAGE, redEnvelopeId);
+					// 调用websocket 发送消息到netty后端
+					var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
+					wsWebview.evalJS("CHAT.chat('" + JSON.stringify(data) + "')");
+				})
+				document.getElementById('detailbtn').addEventListener("tap", function() {
+					mui.openWindow({
+						url: "redPKdetail.html",
+						id: "redPKdetail.html",
+						extras: {
+							// groupId: groupId,
+							// groupName: groupName,
+							// friendFaceImage: friendFaceImage
+						}
+					});
+				})
+
+
 				// 发送消息按钮的事件绑定
 				document.getElementById('sendrd').addEventListener("tap", function() {
 
@@ -211,8 +262,8 @@
 						app.showToast("请打开网络连接...", "error");
 						return;
 					}
-					var redEnvelopeId =  this.getAttribute("redEnvelopeId");
-					
+					redEnvelopeId = this.getAttribute("redEnvelopeId");
+
 					var data = new app.getRedPackage(app.GET_REDPACKAGE, redEnvelopeId);
 					// 调用websocket 发送消息到netty后端
 					var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
@@ -260,10 +311,31 @@
 					//						receiveMsg("模拟接受消息~~~~~~");
 				});
 			});
-			function OpenRedPackage(data){
-				if (data) data = JSON.parse(data)
+
+			function OpenRedPackage(data) {
 				mui("#popover").popover('toggle', document.getElementById("div"));
-				debugger
+				if (data) data = JSON.parse(data)
+				var sna = data.data.isSnatched,
+					exp = data.data.isExpire,
+					empty = data.data.isEmpty;
+
+				if (!sna && !!exp && !empty) {
+					mui('#redstatus')[0].innerHTML = '恭喜发财，大吉大利'
+					mui('#detailbtn')[0].style.display = 'none'
+					mui('#moneybtn')[0].style.display = 'block'
+				
+				} else {
+					mui('#detailbtn')[0].style.display = 'block'
+					mui('#moneybtn')[0].style.display = 'none'
+					if (sna) {
+						mui('#redstatus')[0].innerHTML = '您已经抢过红包'
+					} else if (exp) {
+						mui('#redstatus')[0].innerHTML = '红包已过期'
+					} else if (empty) {
+						mui('#redstatus')[0].innerHTML = '红包已被抢完'
+					}
+				}
+				
 			}
 			// 接受消息
 			function receiveMsg(msg, nickname, type, isMine, redEnvelope) {
@@ -275,7 +347,7 @@
 					if (isMine) {
 						msgHtml = '<div class="me_lists">' +
 							'<div class="header_img"><img src="' + friendFaceImage + '" width="40px" height="40px" /></div>' +
-							'<div class="msg-redpackage left" redEnvelopeId = "'+redEnvelope.id+'">' +
+							'<div class="msg-redpackage left" redEnvelopeId = "' + redEnvelope.id + '">' +
 							'<div class="redimg">' +
 							'<img src="image/redpeick.png">' +
 							'</div>' +
@@ -287,7 +359,7 @@
 					} else {
 						msgHtml = '<div class="friend_lists">' +
 							'<div class="header_img"><img src="' + friendFaceImage + '" width="40px" height="40px" /></div>' +
-							'<div class="msg-redpackage right"  redEnvelopeId = "'+redEnvelope.id+'">' +
+							'<div class="msg-redpackage right"  redEnvelopeId = "' + redEnvelope.id + '">' +
 							'<div class="redimg">' +
 							'<img src="image/redpeick.png">' +
 							'</div>' +

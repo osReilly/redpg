@@ -346,7 +346,7 @@ window.app = {
 	CHAT: 2, // 聊天消息
 	SIGNED: 3, // 消息签收
 	KEEPALIVE: 4, // 客户端保持心跳
-	PULL_FRIEND: 5, // 重新拉取好友
+	READY_REDPACKAGE: 5, // 点击抢
 	GET_REDPACKAGE: 6, // 抢红包
 	GROUP_UPDATE:9,//群数据变更
 	/**
