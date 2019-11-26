@@ -58,19 +58,21 @@
 	content: "";
 }
 .msg-redpackage{
-	width: 220px;
-	height: 108px;
+	width: 160px;
+	height: 82px;
 	background: url(../image/red-pack-bg.png);
 	background-size: cover;
 	color:#fff;
 	position: relative;
+	border-radius: 4px;
 }
-.msg-redpackage.left{right:-40px}
-.msg-redpackage.right{right:-50px}
+.msg-redpackage.left{right:-6rem}
+.msg-redpackage.right{right:-3.125rem}
 .redimg{float:left;margin:8px 8px;}
-.msg-name{padding: 12px 4px;font-size: 20px;}
-.msg-desc{font-size: 14px;}
-.msg-gname{position: absolute;bottom:-10px;background: #ddd;left: 0;right:0;padding:4px}
+.redimg img{width:30px;height:37.5px;}
+.msg-name{padding:6px 4px ;font-size: 16px;line-height: normal;}
+.msg-desc{font-size: 12px;}
+.msg-gname{position: absolute;bottom:-10px;background: #ddd;left: 0;right:0;padding:4px;font-size:12px}
 .msg-wrapper.right p:before {
 	left: -12px;
 	border-color: transparent #FFFFFF;

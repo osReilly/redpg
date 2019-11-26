@@ -347,6 +347,7 @@ window.app = {
 	SIGNED: 3, // 消息签收
 	KEEPALIVE: 4, // 客户端保持心跳
 	PULL_FRIEND: 5, // 重新拉取好友
+	GET_REDPACKAGE: 6, // 抢红包
 	GROUP_UPDATE:9,//群数据变更
 	/**
 	 * 和后端的 ChatMsg 聊天模型对象保持一致
@@ -359,6 +360,11 @@ window.app = {
 		this.cmd = action;
 		 this.data = {token:token};
 	},
+	getRedPackage: function(action, redEnvelopeId){
+		this.cmd = action;
+		 this.data = {redEnvelopeId:redEnvelopeId};
+	},
+	
 	/**
 	 * 和后端的 ChatMsg 聊天模型对象保持一致
 	 * @param {Object} senderId

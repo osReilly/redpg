@@ -182,16 +182,20 @@
 				},
 				wsmessage: function(e) {
 					console.log("接受到消息：" + e.data);
-
 					// 转换DataContent为对象
 					var dataContent = JSON.parse(e.data);
 					var flag = dataContent.success
 					console.log("接受到消息dataContent：" + JSON.stringify(dataContent));
-					if(!flag) mui.toast(dataContent.msg);return;
+					debugger
+					if(!flag){
+						mui.toast(dataContent.msg);
+						return;
+					}
 					var action = dataContent.cmd;
 					var msg = dataContent.data.message;
 					
 					var nickname = dataContent.data.userGroupName;
+					
 					if (action === app.CONNECT) {
 						var groups = dataContent.data.groups
 						initLists(groups)
@@ -207,8 +211,21 @@
 						var isRead = true; // 设置消息的默认状态为已读
 						var type = dataContent.data.type
 						if (chatWebview != null) {
-							if (dataContent.data.userId == app.getUserGlobalInfo().id) return;
-							chatWebview.evalJS("receiveMsg('" + msg + "','" + nickname + "','" + type + "')");
+							var isMine = dataContent.data.userId == app.getUserGlobalInfo().id
+							var redEnvelope = JSON.stringify(dataContent.data.redEnvelope) 
+							debugger
+							if (isMine && type == '1') return;
+								chatWebview.evalJS("receiveMsg('" + msg + "','" + nickname + "','" + type + "','" + isMine + "','" + redEnvelope + "')");
+							chatWebview.evalJS("resizeScreen()");
+						} else {
+							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
+						}
+					}
+					if (action === app.GET_REDPACKAGE) {
+						var chatWebview = plus.webview.getWebviewById("chatting-" + dataContent.data.groupId);
+						var isRead = true; // 设置消息的默认状态为已读
+						if (chatWebview != null) {
+							chatWebview.evalJS("OpenRedPackage('" + JSON.stringify(dataContent)  + "')");
 							chatWebview.evalJS("resizeScreen()");
 						} else {
 							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态

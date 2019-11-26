@@ -80,6 +80,10 @@
 				</div>
 
 			</div>
+			<div id="popover" class="mui-popover" style="height: 250px;">
+						<div class="mui-popover-arrow"></div>
+						<div>我是自定义位置弹出层</div>
+					</div>
 		</div>
 
 		<footer>
@@ -198,6 +202,23 @@
 						}
 					});
 				});
+
+				// 为红包绑定点击事件
+				mui("#msg").on("tap", ".msg-redpackage", function(e) {
+					// 发送之前判断网络的状态
+					var connectionStatus = plus.networkinfo.getCurrentType();
+					if (connectionStatus == 0 || connectionStatus == 1) {
+						app.showToast("请打开网络连接...", "error");
+						return;
+					}
+					var redEnvelopeId =  this.getAttribute("redEnvelopeId");
+					
+					var data = new app.getRedPackage(app.GET_REDPACKAGE, redEnvelopeId);
+					// 调用websocket 发送消息到netty后端
+					var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
+					wsWebview.evalJS("CHAT.chat('" + JSON.stringify(data) + "')");
+
+				})
 				// 发送消息按钮的事件绑定
 				send.addEventListener("tap", function() {
 
@@ -239,23 +260,43 @@
 					//						receiveMsg("模拟接受消息~~~~~~");
 				});
 			});
-
+			function OpenRedPackage(data){
+				if (data) data = JSON.parse(data)
+				mui("#popover").popover('toggle', document.getElementById("div"));
+				debugger
+			}
 			// 接受消息
-			function receiveMsg(msg, nickname, type) {
-				console.log('receiveMsg', msg, nickname)
+			function receiveMsg(msg, nickname, type, isMine, redEnvelope) {
+				if (redEnvelope) redEnvelope = JSON.parse(redEnvelope)
+				console.log('receiveMsg', msg, nickname, isMine, redEnvelope)
+				debugger
 				var msgHtml = ''
 				if (parseInt(type) === 3) {
-					msgHtml = '<div class="friend_lists">' + '
-					'<div class="header_img"><img src="'+friendFaceImage+'" width="40px" height="40px" /></div>' +
-					'<div class="msg-redpackage right">' +
-					'<div class="redimg">' +
-					'<img src="image/redpeick.png">' +
-					'</div>' +
-					'<div class="msg-name">'+msg+'</div>' +
-					'<div class="msg-desc">领取红包</div>' +
-					'<p class="msg-gname">扫雷红包游戏</p>' +
-					'</div>' +
-					'</div>';
+					if (isMine) {
+						msgHtml = '<div class="me_lists">' +
+							'<div class="header_img"><img src="' + friendFaceImage + '" width="40px" height="40px" /></div>' +
+							'<div class="msg-redpackage left" redEnvelopeId = "'+redEnvelope.id+'">' +
+							'<div class="redimg">' +
+							'<img src="image/redpeick.png">' +
+							'</div>' +
+							'<div class="msg-name">' + redEnvelope.money + '--' + redEnvelope.number + '</div>' +
+							'<div class="msg-desc">领取红包</div>' +
+							'<p class="msg-gname">扫雷红包游戏</p>' +
+							'</div>' +
+							'</div>';
+					} else {
+						msgHtml = '<div class="friend_lists">' +
+							'<div class="header_img"><img src="' + friendFaceImage + '" width="40px" height="40px" /></div>' +
+							'<div class="msg-redpackage right"  redEnvelopeId = "'+redEnvelope.id+'">' +
+							'<div class="redimg">' +
+							'<img src="image/redpeick.png">' +
+							'</div>' +
+							'<div class="msg-name">' + redEnvelope.money + '--' + redEnvelope.number + '</div>' +
+							'<div class="msg-desc">领取红包</div>' +
+							'<p class="msg-gname">扫雷红包游戏</p>' +
+							'</div>' +
+							'</div>';
+					}
 
 				} else {
 					msgHtml = '<div class="friend_lists">' +
