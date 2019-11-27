@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>红包详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/redpackage.css" />
+		<style type="text/css">
+			.mui-btn-block {
+				padding: 10px 0
+			}
+
+			.mui-input-row label~input,
+			.mui-input-row label {
+				font-size: 15px;
+			}
+
+			.logo-icon {
+				width: 100px;
+				margin: 70px auto 30px auto;
+				border-radius: 50%;
+			}
+
+			.text {
+				font-size: 14px;
+				color: #666666;
+			}
+
+			.custorm-form.mui-input-group:before,
+			.custorm-form.mui-input-group:after {
+				height: 0;
+			}
+
+			.custorm-form .mui-input-row {
+				height: 50px;
+				line-height: 50px;
+				font-size: 1;
+			}
+
+			.custorm-form .mui-input-row label {
+				padding: 16px 15px;
+			}
+
+			.custorm-form .codebtn {
+				position: absolute;
+				right: 10px;
+				top: 5px;
+				width: auto;
+				padding: 8px 15px
+			}
+
+			.three-row .mui-input-clear {
+				padding-right: 90px;
+			}
+
+			.three-row .mui-input-clear~.mui-icon-clear {
+				right: 90px;
+			}
+
+			.m-t-10 {
+				margin-top: 10px;
+			}
+
+			.text-right {
+				display: inline-block;
+				vertical-align: middle;
+				margin: 0 10px;
+			}
+
+			.mui-btn.mui-btn-mini {
+				padding: 2px 4px;
+				color: #1AAD19
+			}
+
+			.mui-navigate-center {
+				color: #1AAD19 !important;
+				text-align: center;
+			}
+
+			.mui-content-padded {
+				margin: 30px auto
+			}
+
+			.mui-content-padded>.mui-btn-default {
+				border: 0;
+				font-size: 15px;
+				color: red;
+			}
+
+			.my-media-body {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 64px;
+			}
+
+			.my-media-body .mui-media-body {
+				flex: 1
+			}
+			.mui-table-title{
+				    margin: 5px 15px 5px 10px;
+				    color: #6d6d72;
+				    font-size: 15px;
+			}
+			.title{position: absolute;top:0;}
+			.top{height:120px;background: url(image//631.png) no-repeat center/contain;}
+			.info{margin:30px auto;text-align: center;}
+			.info .h{border-radius: 50%;border:2px solid #ADADAD}
+			.info .m{font-size: 18px;color:#000000}
+			.info .p{font-size: 15px;color:#000000}
+			.mui-bar-nav{box-shadow: none;}
+			.mui-content.groupsetting{margin-top: 0;padding-top: 20px;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title title-color">红包详情</h1>
+		</header>
+		<div class="mui-content groupsetting" id="groupsetting">
+			<div class="top">
+				
+			</div>
+			<div class="info">
+				<img class="h" src="image/33.png" alt="">
+				<p class="p">18588282774</p>
+				<p class="d">14-1</p>
+				<p class="m">13.65元</p>
+			</div>
+			
+			<div class="mui-table-title" id="tabletitle">已领取1/2个</div>
+			<ul class="mui-table-view" id="tablelist">
+				<li class="mui-table-view-cell mui-media my-media-body">
+					<img class="mui-media-object mui-pull-left" src="image/22.png">
+					<div class="mui-media-body">
+						18588280774
+						<p class="mui-ellipsis">09:09:42:58</p>
+					</div>
+					<div class="mui-text-right">13.65元</div>
+				</li>
+			</ul>
+		</div>
+
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function() {
+
+			});
+		</script>
+	</body>
+
+</html>

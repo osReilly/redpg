@@ -56,7 +56,7 @@
 		<div id="msg-outter" class="mui-content">
 			<div id='msg'>
 
-				<div class="friend_lists">
+<!-- 				<div class="friend_lists">
 					<div class="header_img">
 						<img src="image/face-default-cat.png" width="40px" height="40px" />
 					</div>
@@ -100,7 +100,7 @@
 						<div class="msg-right-name">名字</div>
 						<p class="msg-right-green">好的，没问题！时间地点？</p>
 					</div>
-				</div>
+				</div> -->
 
 			</div>
 			<div id="popover" class="redpackgePopver mui-popover" style="height: 350px;">
@@ -218,7 +218,7 @@
 				document.getElementById('moneybtn').addEventListener("tap", function() {
 
 
-					var data = new app.getRedPackage(app.READY_REDPACKAGE, redEnvelopeId);
+					var data = new app.getRedPackage(app.GET_REDPACKAGE, redEnvelopeId);
 					// 调用websocket 发送消息到netty后端
 					var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
 					wsWebview.evalJS("CHAT.chat('" + JSON.stringify(data) + "')");
@@ -264,7 +264,7 @@
 					}
 					redEnvelopeId = this.getAttribute("redEnvelopeId");
 
-					var data = new app.getRedPackage(app.GET_REDPACKAGE, redEnvelopeId);
+					var data = new app.getRedPackage(app.READY_REDPACKAGE, redEnvelopeId);
 					// 调用websocket 发送消息到netty后端
 					var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
 					wsWebview.evalJS("CHAT.chat('" + JSON.stringify(data) + "')");
@@ -313,13 +313,14 @@
 			});
 
 			function OpenRedPackage(data) {
+				debugger
 				mui("#popover").popover('toggle', document.getElementById("div"));
 				if (data) data = JSON.parse(data)
 				var sna = data.data.isSnatched,
 					exp = data.data.isExpire,
 					empty = data.data.isEmpty;
 
-				if (!sna && !!exp && !empty) {
+				if (!sna && !exp && !empty) {
 					mui('#redstatus')[0].innerHTML = '恭喜发财，大吉大利'
 					mui('#detailbtn')[0].style.display = 'none'
 					mui('#moneybtn')[0].style.display = 'block'
@@ -334,6 +335,21 @@
 					} else if (empty) {
 						mui('#redstatus')[0].innerHTML = '红包已被抢完'
 					}
+				}
+				
+			}
+			
+			GetRedPackage(dataContent){
+				
+				if(dataContent){
+					mui.openWindow({
+						url: "redPKdetail.html",
+						id: "redPKdetail.html",
+						extras: {
+							groupId: groupId,
+							data: dataContent
+						}
+					});
 				}
 				
 			}

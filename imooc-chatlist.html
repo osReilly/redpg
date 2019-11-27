@@ -53,7 +53,7 @@
 		<script src="js/app.js"></script>
 		<script type="text/javascript">
 			mui.init()
-
+			var mgroupId = 0
 			mui.ready(function() {
 
 				// 获取用户全局对象
@@ -78,7 +78,7 @@
 					var groupId = this.getAttribute("groupId");
 					var groupName = this.getAttribute("groupName");
 					var friendFaceImage = this.getAttribute("friendFaceImage");
-
+					mgroupId = groupId
 					// 打开聊天子页面
 					mui.openWindow({
 						url: "chatting.html",
@@ -207,6 +207,7 @@
 					// }
 					if (action === app.CHAT) {
 						console.log('app.chat----', dataContent)
+						mgroupId = dataContent.data.groupId
 						var chatWebview = plus.webview.getWebviewById("chatting-" + dataContent.data.groupId);
 						var isRead = true; // 设置消息的默认状态为已读
 						var type = dataContent.data.type
@@ -221,11 +222,23 @@
 							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
 						}
 					}
-					if (action === app.GET_REDPACKAGE) {
-						var chatWebview = plus.webview.getWebviewById("chatting-" + dataContent.data.groupId);
+					if (action === app.READY_REDPACKAGE) {
+						debugger
+						var chatWebview = plus.webview.getWebviewById("chatting-" + mgroupId);
 						var isRead = true; // 设置消息的默认状态为已读
 						if (chatWebview != null) {
 							chatWebview.evalJS("OpenRedPackage('" + JSON.stringify(dataContent)  + "')");
+							chatWebview.evalJS("resizeScreen()");
+						} else {
+							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
+						}
+					}
+					if (action === app.GET_REDPACKAGE) {
+						debugger
+						var chatWebview = plus.webview.getWebviewById("chatting-" + mgroupId);
+						var isRead = true; // 设置消息的默认状态为已读
+						if (chatWebview != null) {
+							chatWebview.evalJS("GetRedPackage('" + JSON.stringify(dataContent)  + "')");
 							chatWebview.evalJS("resizeScreen()");
 						} else {
 							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
