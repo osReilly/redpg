@@ -141,7 +141,10 @@
 				title: '群主设置'
 			}];
 			var redEnvelopeId = 0
+			var rddata = null
 			mui.plusReady(function() {
+				plus.navigator.setStatusBarStyle("light");
+				plus.navigator.setStatusBarBackground("#0eac68");
 				document.getElementById('more').addEventListener("tap", function(e) {
 					console.log('more', e)
 					plus.nativeUI.actionSheet({
@@ -179,7 +182,7 @@
 				chattingWebview.setStyle({
 					softinputMode: "adjustResize"
 				});
-
+				
 				// 获取上一个页面传入的好友属性值
 				friendUserId = chattingWebview.groupId;
 				friendNickname = chattingWebview.groupName;
@@ -224,15 +227,7 @@
 					wsWebview.evalJS("CHAT.chat('" + JSON.stringify(data) + "')");
 				})
 				document.getElementById('detailbtn').addEventListener("tap", function() {
-					mui.openWindow({
-						url: "redPKdetail.html",
-						id: "redPKdetail.html",
-						extras: {
-							// groupId: groupId,
-							// groupName: groupName,
-							// friendFaceImage: friendFaceImage
-						}
-					});
+					GetRedPackage(rddata)
 				})
 
 
@@ -339,14 +334,15 @@
 				
 			}
 			
-			GetRedPackage(dataContent){
-				
+			function GetRedPackage(dataContent){
+				rddata = dataContent
 				if(dataContent){
+					mui("#popover").popover('toggle', document.getElementById("div"));
 					mui.openWindow({
 						url: "redPKdetail.html",
 						id: "redPKdetail.html",
 						extras: {
-							groupId: groupId,
+							groupId: friendUserId,
 							data: dataContent
 						}
 					});

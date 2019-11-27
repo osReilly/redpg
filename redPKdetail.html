@@ -99,19 +99,46 @@
 			.my-media-body .mui-media-body {
 				flex: 1
 			}
-			.mui-table-title{
-				    margin: 5px 15px 5px 10px;
-				    color: #6d6d72;
-				    font-size: 15px;
+
+			.mui-table-title {
+				margin: 5px 15px 5px 10px;
+				color: #6d6d72;
+				font-size: 15px;
 			}
-			.title{position: absolute;top:0;}
-			.top{height:120px;background: url(image//631.png) no-repeat center/contain;}
-			.info{margin:30px auto;text-align: center;}
-			.info .h{border-radius: 50%;border:2px solid #ADADAD}
-			.info .m{font-size: 18px;color:#000000}
-			.info .p{font-size: 15px;color:#000000}
-			.mui-bar-nav{box-shadow: none;}
-			.mui-content.groupsetting{margin-top: 0;padding-top: 20px;}
+
+			.top {
+				height: 220px;
+				background: url(image//631.png) no-repeat 0 0/contain;
+			}
+
+			.info {
+				padding: 40px 0;
+				text-align: center;
+			}
+
+			.info .h {
+				border-radius: 50%;
+				border: 2px solid #ADADAD
+			}
+
+			.info .m {
+				font-size: 18px;
+				color: #000000
+			}
+
+			.info .p {
+				font-size: 15px;
+				color: #000000
+			}
+
+			.mui-bar-nav {
+				box-shadow: none;
+			}
+
+			.mui-content.groupsetting {
+				margin-top: 0;
+				padding-top: 10px;
+			}
 		</style>
 	</head>
 
@@ -122,15 +149,15 @@
 		</header>
 		<div class="mui-content groupsetting" id="groupsetting">
 			<div class="top">
-				
+				<div class="info">
+					<img class="h" src="image/33.png" alt="">
+					<p class="p">18588282774</p>
+					<p class="d">14-1</p>
+					<p class="m">13.65元</p>
+				</div>
 			</div>
-			<div class="info">
-				<img class="h" src="image/33.png" alt="">
-				<p class="p">18588282774</p>
-				<p class="d">14-1</p>
-				<p class="m">13.65元</p>
-			</div>
-			
+
+
 			<div class="mui-table-title" id="tabletitle">已领取1/2个</div>
 			<ul class="mui-table-view" id="tablelist">
 				<li class="mui-table-view-cell mui-media my-media-body">
@@ -149,7 +176,28 @@
 		<script type="text/javascript">
 			mui.init()
 			mui.plusReady(function() {
-
+				plus.navigator.setStatusBarStyle("light");
+				plus.navigator.setStatusBarBackground("#e1574a");
+				// 获取聊天页面webview
+				var detailview = plus.webview.currentWebview();
+				var groupid = detailview.groupId
+				var data = JSON.parse(detailview.data);
+				var redEnvelopeReceiveList = data.data.redEnvelopeReceiveList
+				var tablelist = document.getElementById('tablelist')
+				debugger
+				
+				tablelist.innerHTML=''
+				for (var i = 0; i < redEnvelopeReceiveList.length; i++) {
+					var item = redEnvelopeReceiveList[i]
+					var tpm='<li class="mui-table-view-cell mui-media my-media-body">' +
+					'<img class="mui-media-object mui-pull-left" src="image/22.png">' +
+					'<div class="mui-media-body">' + item.nickname +
+						'<p class="mui-ellipsis">' + item.createTime + '</p>' +
+						'</div>' +
+						'<div class="mui-text-right">' + item.income + '元</div>' +
+						'</li>'
+						tablelist.insertAdjacentHTML('beforeend', tpm);
+				}
 			});
 		</script>
 	</body>
