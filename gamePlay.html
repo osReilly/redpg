@@ -127,7 +127,7 @@
 							},
 							success: function(data) {
 								//服务器返回响应，根据响应结果，分析是否登录成功；
-								console.log(JSON.stringify(data));
+								console.log('success',JSON.stringify(data));
 
 								maxRedEnvelope.blur();
 								minRedEnvelope.blur();
@@ -137,15 +137,12 @@
 									// 登录或者注册成功之后，保存全局用户对象到本地缓存
 									mui.toast(data.msg)
 									// 页面跳转
-									// mui.openWindow("imooc-chatlist.html", "imooc-chatlist.html");
-									console.log('app.chat----', dataContent)
-									// var chatlist = plus.webview.getWebviewById("imooc-chatlist.html");
-									// if (chatlist != null) {
-									// 	if (dataContent.data.userId == app.getUserGlobalInfo().id) return;
-									// 	chatWebview.evalJS("receiveMsg('" + msg + "')");
-									// 	chatWebview.evalJS("resizeScreen()");
-									// } else {
-									// addLists
+									mui.openWindow("imooc-chatlist.html", "imooc-chatlist.html");
+									var chatlist = plus.webview.getWebviewById("imooc-chatlist.html");
+									if (chatlist != null) {
+										chatlist.evalJS("addLists('" +JSON.stringify(data.data) + "')");
+									}
+								
 									mui.openWindow("index.html", "index.html");
 								} else {
 									app.showToast(data.msg, "error");

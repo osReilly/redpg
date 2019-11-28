@@ -33,8 +33,16 @@
 	        }
 			#ul_chatSnapshot{margin-top: 0;}
 			.input-flex{display: flex;align-content: center;justify-content: center;}
-			.input-flex input{margin-bottom: 0;margin-right: 10px;}
+			.input-flex input{margin-bottom: 0;margin-right: 10px;height:32px;}
 			.mui-btn-success.mui-btn-mini{padding:4px;line-height: normal;height: auto;float: none;}
+			.chat-with-friend.item-expire img{
+				-webkit-filter: grayscale(100%);
+				-moz-filter: grayscale(100%);
+				-ms-filter: grayscale(100%);
+				-o-filter: grayscale(100%);
+				filter: grayscale(100%);
+				filter: gray
+			}
 		</style>
 	</head>
 
@@ -50,7 +58,9 @@
 			<ul class="mui-table-view" id="ul_friend_request_list" style="margin-bottom: 10px;" style="display: none;">
 			</ul>
 
-			<ul id="ul_chatSnapshot" class="mui-table-view"></ul>
+			<ul id="ul_chatSnapshot" class="mui-table-view">
+
+			</ul>
 		</div>
 
 
@@ -99,18 +109,18 @@
 								var ul_friend_request_list = document.getElementById("ul_friend_request_list");
 								if (friend != null) {
 									var requestHtml = ""
-									requestHtml = '<li groupId="' + friend.ownerId  + '" groupName="' + friend.displayName +
+									requestHtml = '<li groupId="' + friend.ownerId + '" groupName="' + friend.displayName +
 										'" class="chat-with-friend mui-table-view-cell mui-media">' +
 										'<div class="mui-slider-right mui-disabled">' +
-										'<a id="link_delChatRecord" groupId="' + friend.ownerId  + '" class="mui-btn mui-btn-red">删除</a>' +
+										'<a id="link_delChatRecord" groupId="' + friend.ownerId + '" class="mui-btn mui-btn-red">删除</a>' +
 										'</div>' +
 										'<div class="mui-slider-handle mui-media-body "><div class="mui-media-object mui-pull-left" style="border: 1px solid #ccc;">' +
-										'<img class=" mui-pull-left" src="image/3.png" style="width:40px"/></div>' +friend.displayName  +
+										'<img class=" mui-pull-left" src="image/3.png" style="width:40px"/></div>' + friend.displayName +
 										'</div>' +
 										'</li>';
 									ul_friend_request_list.innerHTML = requestHtml;
-									ul_friend_request_list.style.display='block'
-									document.getElementById("ul_chatSnapshot").style.display='none'
+									ul_friend_request_list.style.display = 'block'
+									document.getElementById("ul_chatSnapshot").style.display = 'none'
 
 								}
 							} else {
@@ -121,23 +131,23 @@
 				});
 				// 为群搜索绑定点击事件
 				mui("#ul_friend_request_list").on("tap", ".chat-with-friend", function(e) {
-					var groupid =  this.getAttribute("groupId");
+					var groupid = this.getAttribute("groupId");
 					mui.prompt('', '请输入邀请码', null, ['取消', '确认'], function(e) {
 						console.log('prompt', JSON.stringify(e))
 						if (e.index == '1') {
-							var params = "group/joinGroup?groupId="+groupid+"&invitationCode="+e.value
+							var params = "group/joinGroup?groupId=" + groupid + "&invitationCode=" + e.value
 							mui.ajax(app.serverUrl + params, {
 								dataType: 'json', //服务器返回json格式数据
 								type: 'post', //HTTP请求类型
 								timeout: 10000, //超时时间设置为10秒；
 								headers: {
 									'Content-Type': 'application/json',
-									'token':user.token
+									'token': user.token
 								},
 								success: function(data) {
 									if (data.success) {
 										// 页面跳转
-										
+
 									} else {
 										console.error(data.msg)
 										app.showToast(data.msg, "error");
@@ -146,8 +156,8 @@
 							});
 						}
 						txt_your_friend_username.value = ''
-						mui("#ul_friend_request_list")[0].style.display='none'
-						mui("#ul_chatSnapshot")[0].style.display='block'
+						mui("#ul_friend_request_list")[0].style.display = 'none'
+						mui("#ul_chatSnapshot")[0].style.display = 'block'
 					}, 'div')
 				})
 				// 为聊天快照列表量绑定点击事件
@@ -156,16 +166,41 @@
 					var groupName = this.getAttribute("groupName");
 					var friendFaceImage = this.getAttribute("friendFaceImage");
 					mgroupId = groupId
-					// 打开聊天子页面
-					mui.openWindow({
-						url: "chatting.html",
-						id: "chatting-" + groupId, // 每个朋友的聊天页面都是唯一对应的
-						extras: {
-							groupId: groupId,
-							groupName: groupName,
-							friendFaceImage: friendFaceImage
+					mui.prompt('', '请输入续费天数', null, ['取消', '确认'], function(e) {
+						console.log('prompt', JSON.stringify(e))
+						if (e.index == '1'&& e.value) {
+							// 打开聊天子页面
+							mui.openWindow({
+								url: "chatting.html",
+								id: "chatting-" + groupId, // 每个朋友的聊天页面都是唯一对应的
+								extras: {
+									groupId: groupId,
+									groupName: groupName,
+									friendFaceImage: friendFaceImage
+								}
+							});
+							// 		var params = "group/joinGroup?groupId=" + groupid + "&invitationCode=" + e.value
+							// 		mui.ajax(app.serverUrl + params, {
+							// 			dataType: 'json', //服务器返回json格式数据
+							// 			type: 'post', //HTTP请求类型
+							// 			timeout: 10000, //超时时间设置为10秒；
+							// 			headers: {
+							// 				'Content-Type': 'application/json',
+							// 				'token': user.token
+							// 			},
+							// 			success: function(data) {
+							// 				if (data.success) {
+							// 					// 页面跳转
+
+							// 				} else {
+							// 					console.error(data.msg)
+							// 					app.showToast(data.msg, "error");
+							// 				}
+							// 			}
+							// 		});
 						}
-					});
+					}, 'div')
+
 
 					// var me = app.getUserGlobalInfo();
 					// // 标记未读状态为已读
@@ -408,18 +443,21 @@
 					var readHtmlAfter = '';
 
 					if (!isRead) {
-						readHtmlBefore = '<span class="red-point">';
-						readHtmlAfter = '</span>';
+						// readHtmlBefore = '<span class="red-point">';
+						// readHtmlAfter = '</span>';
 					}
-					chatItemHtml = '<li groupId="' + groupId + '" groupName="' + chatItem.displayName +
-						'" class="chat-with-friend mui-table-view-cell mui-media">' +
+					var masterGroup = chatItem.role == '3' ? '<span class="mui-pull-right mui-icon mui-icon-personadd"></span>' : '';
+					var expireClass = chatItem.expire ? ' item-expire' : ''
+					chatItemHtml = '<li expire="' + chatItem.expire + '" role="' + chatItem.role + '" groupId="' + groupId +
+						'" groupName="' + chatItem.displayName +
+						'" class="chat-with-friend mui-table-view-cell mui-media' + expireClass + '">' +
 						'<div class="mui-slider-right mui-disabled">' +
 						'<a id="link_delChatRecord" groupId="' + groupId + '" class="mui-btn mui-btn-red">删除</a>' +
 						'</div>' +
 						'<div class="mui-slider-handle mui-media-body "><div class="mui-media-object mui-pull-left" style="border: 1px solid #ccc;">' +
 						itemp + '<img class=" mui-pull-left" src="' + item + '" style="width:40px"/></div>' +
 						readHtmlBefore + chatItem.displayName + readHtmlAfter +
-						'<p class="mui-ellipsis">' + chatItem.name + '</p>' +
+						masterGroup +
 						'</div>' +
 						'</li>';
 					ul_chatSnapshot.insertAdjacentHTML('beforeend', chatItemHtml);
@@ -427,6 +465,7 @@
 			}
 
 			function addLists(groupinfo) {
+
 				var chatItemHtml = "";
 				var ul_chatSnapshot = document.getElementById("ul_chatSnapshot");
 				var ulchildren = ul_chatSnapshot.children
@@ -434,15 +473,21 @@
 					var ngroupid = ulchildren[n].getAttribute('groupId')
 					if (ngroupid && groupinfo.groupId === ngroupid) ul_chatSnapshot.removeChild(ulchildren[n])
 				}
-				var chatItem = groupinfo;
+				var chatItem = typeof groupinfo === "object" ? groupinfo : JSON.parse(groupinfo);
 				var groupId = chatItem.id;
-				var groupMemberList = chatItem.top4MemberAvatarList
 				//头像
 				var itemp = ''
-				for (var i = 0; i < groupMemberList.length; i++) {
-					var item = groupMemberList[i];
-					itemp += '<img class=" mui-pull-left" src="' + item + '" style="width:40px"/>'
+
+				var groupMemberList = chatItem.top4MemberAvatarList
+				if (groupMemberList) {
+					for (var i = 0; i < groupMemberList.length; i++) {
+						var item = groupMemberList[i];
+						itemp += '<img class=" mui-pull-left" src="' + item + '" style="width:40px"/>'
+					}
+				} else {
+					itemp = '<img class=" mui-pull-left" src="image/3.png" style="width:40px"/>'
 				}
+
 				// // 根据friendId从本地联系人列表的缓存中拿到相关信息
 				// var friend = app.getFriendFromContactList(friendId);
 
@@ -455,15 +500,18 @@
 					readHtmlBefore = '<span class="red-point">';
 					readHtmlAfter = '</span>';
 				}
-				chatItemHtml = '<li groupId="' + groupId + '" groupName="' + chatItem.displayName +
-					'" class="chat-with-friend mui-table-view-cell mui-media">' +
+				var masterGroup = chatItem.role == '3' ? '<span class="mui-icon mui-icon-personadd"></span>' : ''
+				var expireClass = chatItem.expire ? ' item-expire' : ''
+				chatItemHtml = '<li expire="' + chatItem.expire + '" role="' + chatItem.role + '" groupId="' + groupId +
+					'" groupName="' + chatItem.displayName +
+					'" class="chat-with-friend mui-table-view-cell mui-media' + expireClass + '">' +
 					'<div class="mui-slider-right mui-disabled">' +
 					'<a id="link_delChatRecord" groupId="' + groupId + '" class="mui-btn mui-btn-red">删除</a>' +
 					'</div>' +
 					'<div class="mui-slider-handle mui-media-body "><div class="mui-media-object mui-pull-left" style="border: 1px solid #ccc;">' +
 					itemp + '</div>' +
 					readHtmlBefore + chatItem.displayName + readHtmlAfter +
-					'<p class="mui-ellipsis">' + chatItem.name + '</p>' +
+					masterGroup +
 					'</div>' +
 					'</li>';
 				ul_chatSnapshot.insertAdjacentHTML('beforeend', chatItemHtml);

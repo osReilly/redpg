@@ -24,8 +24,8 @@
 	top: 5px;
 	right: 0px;
 }
-.msg-right-name{margin:12px 60px 0 0;}
-.msg-left-name{margin:12px  0 0 60px;}
+.msg-right-name{margin:12px 60px 0 0;font-size:12px}
+.msg-left-name{margin:12px  0 0 60px;font-size:12px}
 /*背景气泡*/
 .msg-left-white {
 	background-color: #FFFFFF;
@@ -48,6 +48,7 @@
 
 .msg-wrapper.right p {
 	margin-left: 60px;
+	margin-top:0
 }
 
 .msg-wrapper.right p:before {
@@ -89,6 +90,7 @@
 
 .msg-wrapper.left p {
 	margin-right: 60px;
+	margin-top:0px
 }
 
 .msg-wrapper.left {
@@ -130,10 +132,11 @@ footer {
 	left: 0px;
 	bottom: 0px;
 	overflow: hidden;
-	padding: 0px 145px 0 10px;
+	/* padding: 0px 145px 0 10px; */
 	background-color: #fafafa;
 }
-
+.footer-bar{display: flex;width: 100%;height:50px}
+.footer-center{flex:1}
 .footer-left {
 	position: absolute;
 	width: 50px;
@@ -147,15 +150,16 @@ footer {
 }
 
 .footer-right {
-	position: absolute;
+	/* position: absolute;
 	width: 142px;
 	height: 50px;
 	right: 0px;
-	bottom: 0px;
+	bottom: 0px; */
+	width:auto;
 	text-align: center;
 	vertical-align: middle;
 	line-height: 100%;
-	padding: 8px 15px 0 0;
+	padding: 8px 10px;
 	display: inline-block;
 }
 

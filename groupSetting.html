@@ -62,13 +62,41 @@
 			.m-t-10 {
 				margin-top: 10px;
 			}
-			.text-right{display: inline-block;vertical-align: middle;margin: 0 10px;}
-			.mui-btn.mui-btn-mini{padding:2px 4px;color:#1AAD19}
-			.mui-navigate-center{color:#1AAD19!important;text-align: center;}
-			.mui-content-padded{margin:30px auto}
-			.mui-content-padded>.mui-btn-default{border:0;font-size: 15px;color: red;}
-			#groupsetting .mui-table-view:first-child{margin-top: 0;}
-			.groupsetting .mui-table-view .mui-table-view-cell a{font-size: 14px;color: #444;}
+
+			.text-right {
+				display: inline-block;
+				vertical-align: middle;
+				margin: 0 10px;
+			}
+
+			.mui-btn.mui-btn-mini {
+				padding: 2px 4px;
+				color: #1AAD19
+			}
+
+			.mui-navigate-center {
+				color: #1AAD19 !important;
+				text-align: center;
+			}
+
+			.mui-content-padded {
+				margin: 30px auto
+			}
+
+			.mui-content-padded>.mui-btn-default {
+				border: 0;
+				font-size: 15px;
+				color: red;
+			}
+
+			#groupsetting .mui-table-view:first-child {
+				margin-top: 0;
+			}
+
+			.groupsetting .mui-table-view .mui-table-view-cell a {
+				font-size: 14px;
+				color: #444;
+			}
 		</style>
 	</head>
 
@@ -81,16 +109,12 @@
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell mui-media">
 					<a href="javascript:;">
-						<div class="mui-media-body" style="line-height: 45px;">
-							<img class="mui-media-object mui-pull-left" src="image/33.png" id="myhead">
-							<img class="mui-media-object mui-pull-left" src="image/33.png" id="myhead">
-							<img class="mui-media-object mui-pull-left" src="image/33.png" id="myhead">
-							<img class="mui-media-object mui-pull-left" src="image/33.png" id="myhead">
+						<div class="mui-media-body" style="line-height: 45px;" id="myheadwap">
 						</div>
 					</a>
 				</li>
-			
-				<li class="mui-table-view-cell">
+
+				<li class="mui-table-view-cell" id="morelist">
 					<a class="mui-navigate-center">
 						查看更多成员（1人）
 					</a>
@@ -99,27 +123,27 @@
 			<ul class="mui-table-view m-t-10">
 
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right2" id="sexbtn">
-						群组名称 <span class="mui-pull-right">我是测试群</span>
+					<a class="mui-navigate-right2">
+						群组名称 <span class="mui-pull-right" id="gname">我是测试群</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right2" id="siginbtn">
-						群组ID 
+					<a class="mui-navigate-right2">
+						群组ID
 						<span class="mui-pull-right">
-							<span class="text-right">100000</span>
-							<span class="mui-btn mui-btn-default mui-btn-mini">复制</span>
-							</span>
+							<span class="text-right" id="gid">100000</span>
+							<span class="mui-btn mui-btn-default mui-btn-mini" id="gcopy">复制</span>
+						</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right2" id="siginbtn">
+					<a class="mui-navigate-right2">
 						群组类型 <span class="mui-pull-right">私聊群</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right2" id="siginbtn">
-						群组公告 <span class="mui-pull-right">我是公告内容测试</span>
+					<a class="mui-navigate-right2">
+						群组公告 <span class="mui-pull-right" id="gannouncement">我是公告内容测试</span>
 					</a>
 				</li>
 			</ul>
@@ -127,11 +151,11 @@
 
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right2" id="sharecodebtn">
-						我的推荐码 
+						我的推荐码
 						<span class="mui-pull-right">
-							<span class="text-right">w68d</span>
+							<span class="text-right" id="ginvitationCode">w68d</span>
 							<span class="mui-btn mui-btn-default mui-btn-mini">复制</span>
-							</span>
+						</span>
 						</span>
 					</a>
 				</li>
@@ -141,9 +165,9 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right2" id="topbtn">
-						群置顶 <div class="mui-switch mui-switch-mini mui-active">
-						  <div class="mui-switch-handle"></div>
+					<a class="mui-navigate-right2">
+						群置顶 <div class="mui-switch mui-switch-mini" id="topbtn">
+							<div class="mui-switch-handle"></div>
 						</div>
 					</a>
 				</li>
@@ -152,7 +176,7 @@
 
 			<div class="mui-content-padded">
 				<button type="button" class="mui-btn mui-btn-default mui-btn-block" id="submitbtn">清除所有群聊记录</button>
-<button type="button" class="mui-btn mui-btn-default mui-btn-block" id="submitbtn">退出群聊</button>
+				<button type="button" class="mui-btn mui-btn-default mui-btn-block" id="submitbtn">退出群聊</button>
 
 			</div>
 		</div>
@@ -162,6 +186,41 @@
 		<script type="text/javascript">
 			mui.init()
 			mui.plusReady(function() {
+				var groupid = plus.webview.currentWebview().groupId
+				var meInfo = app.getUserGlobalInfo();
+				debugger
+				mui.ajax(app.serverUrl + 'group/getGroupInfo?groupId=' + groupid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json',
+						'token': meInfo.token
+					},
+					success: function(data) {
+						console.log('getGroupInfo', JSON.stringify(data));
+						if (data.success) {
+							var result = data.data
+							var top4 = result.top4MemberList
+							
+							for (var i = 0; i < top4.length; i++) {
+								var item = top4[i].avatar
+								var ItemHtml = '<img class="mui-media-object mui-pull-left" src="' + item + '">'
+								mui('#myheadwap')[0].insertAdjacentHTML('beforeend', ItemHtml);
+							}
+							
+							mui('#morelist .mui-navigate-center')[0].innerText = '查看更多成员(' + top4.length + ')'
+							mui('#gname')[0].innerText = result.name
+							mui('#gid')[0].innerText = result.id
+							mui('#gannouncement')[0].innerText = result.announcement
+							mui('#ginvitationCode')[0].innerText = result.invitationCode
+							result.top ? mui('#topbtn')[0].classList.add('mui-active') : mui('#topbtn')[0].classList.remove(
+								'mui-active')
+						} else {
+							app.showToast(data.msg, "error");
+						}
+					}
+				});
 				// 用户退出
 				var submitbtn = document.getElementById("submitbtn");
 				var phone = document.getElementById("phone");
