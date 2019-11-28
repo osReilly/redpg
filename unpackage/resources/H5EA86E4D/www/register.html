@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>注册</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<style type="text/css">
+			.mui-btn-block {
+				padding: 10px 0
+			}
+
+			.mui-input-row label~input,
+			.mui-input-row label {
+				font-size: 15px;
+			}
+
+			.logo-icon {
+				width: 100px;
+				margin: 70px auto 30px auto;
+				border-radius: 50%;
+			}
+
+			.text {
+				font-size: 14px;
+				color: #666666;
+			}
+
+			.custorm-form.mui-input-group:before,
+			.custorm-form.mui-input-group:after {
+				height: 0;
+			}
+
+			.custorm-form .mui-input-row {
+				height: 50px;
+				line-height: 50px;
+				font-size: 1;
+			}
+
+			.custorm-form .mui-input-row label {
+				padding: 16px 15px;
+			}
+
+			.custorm-form .codebtn {
+				position: absolute;
+				right: 10px;
+				top: 5px;
+				width: auto;
+				padding: 8px 15px
+			}
+
+			.three-row .mui-input-clear {
+				padding-right: 90px;
+			}
+
+			.three-row .mui-input-clear~.mui-icon-clear {
+				right: 90px;
+			}
+
+			.otherlogin {
+				position: fixed;
+				bottom: 20px;
+				left: 0;
+				right: 0;
+				text-align: center;
+				color: #0EAC68;
+				font-size: 15px;
+			}
+
+			.otherlogin .mui-checkbox input[type=checkbox] {
+				position: static;
+				display: inline-block;
+			}
+
+			.otherlogin .mui-checkbox label {
+				margin-top: -5px;
+				width: auto;
+				padding: 2px;
+				vertical-align: middle;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title title-color">注册</h1>
+		</header>
+		<div class="mui-content" id="forgetpay">
+			<form class="mui-input-group custorm-form" id="form">
+				<div class="mui-input-row">
+					<label>手机号</label>
+					<input type="number" id="phone" class="mui-input-clear" placeholder="">
+				</div>
+				<div class="mui-input-row three-row">
+					<label>验证码</label>
+					<input type="number" id="code" class="mui-input-clear" placeholder="">
+					<button type="button" id="sendcode" class="mui-btn codebtn mui-btn-mini">获取验证码</button>
+				</div>
+				<div class="mui-input-row">
+					<label>设置密码</label>
+					<input type="password" id="pass" class="mui-input-clear" placeholder="">
+				</div>
+				<div class="mui-input-row">
+					<label>确认密码</label>
+					<input type="password" id="comformpass" class="mui-input-clear" placeholder="">
+				</div>
+				<div class="mui-content-padded">
+					<button type="submit" class="mui-btn mui-btn-green mui-btn-block" id="submitbtn">确定</button>
+
+				</div>
+			</form>
+
+			<div class="otherlogin">
+				<div class="mui-input-row mui-checkbox ">
+					<input name="Checkbox" type="checkbox" checked>
+					<label>点击同意<a id="protoment">《注册协议》</a></label>
+				</div>
+
+			</div>
+		</div>
+
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.ready(function() {
+
+				var userform = document.getElementById("form");
+				var phone = document.getElementById("phone");
+				var code = document.getElementById("code");
+				var txt_password = document.getElementById("pass")
+
+				userform.addEventListener("submit", function(e) {
+					// 阻止默认时间，阻止默认表单提交
+					e.preventDefault();
+					// 判断用户名是否为空，如果为空则让其获得焦点
+					if (!app.isNotNull(phone.value)) {
+						// 获取焦点
+						phone.focus();
+					} else if (!app.isNotNull(code.value)) {
+						// 获取焦点
+						code.focus();
+					} else if (!app.isNotNull(txt_password.value)) {
+						// 获取焦点
+						txt_password.focus();
+					} else {
+						// 判断用户名和密码的长度，进行限制
+						if (phone.value.length > 12) {
+							app.showToast("用户名不能超过12", "error");
+							return false;
+						} else if (txt_password.value.length > 12) {
+							app.showToast("密码不能超过12", "error");
+							return false;
+						}
+
+						// 获取每台手机的唯一cid
+						// var cid = plus.push.getClientInfo().clientid;
+						// 与后端联调
+
+						var params = "register?mobile=" + phone.value + "&password=" + txt_password.value + "&code=" +
+							code.value
+						mui.ajax(app.serverUrl + params, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								console.log('success-------------',JSON.stringify(data));
+								phone.blur();
+								code.blur();
+								txt_password.blur();
+								if (data.success) {
+									// 登录或者注册成功之后，保存全局用户对象到本地缓存
+									var userInfoJson = data.data;
+									console.log('userInfoJson==============', userInfoJson)
+									app.setUserGlobalInfo(userInfoJson);
+									mui.toast(data.msg)
+									// 触发另外一个webview的自定义事件，可以使用 mui.fire()
+									var imooc_meWebview = plus.webview.getWebviewById("imooc-me.html");
+									mui.fire(imooc_meWebview, "refresh");
+									// 页面跳转
+									mui.openWindow("index.html", "index.html");
+								} else {
+									mui.toast(data.msg)
+									// app.showToast(data.msg, "error");
+								}
+							}
+						});
+
+					}
+					return false
+				});
+
+				//发送验证吗
+				app.sendCode(document.getElementById('sendcode'), code, phone)
+
+				document.getElementById('protoment').addEventListener("tap", function() {
+					mui.toast('这是协议内容')
+				})
+			});
+		</script>
+	</body>
+
+</html>

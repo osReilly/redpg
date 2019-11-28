@@ -1,0 +1,302 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		
+		<style type="text/css">
+			.mui-content .mui-table-view-cell>a{font-size: 14px;}
+			.sex-icon{width: 0.75rem;}
+			.mui-content>.mui-table-view:first-child{margin-top: 0;}
+			.mui-table-view:before{height: 0;}
+			.m-t-10{margin-top: 10px;}
+			.item-icon{
+				width: 20px;
+				display: inline-block;
+				margin-right: 10px;
+				display: inline-block;
+				vertical-align: middle;
+			}
+			.warn-text{text-align: center;position: absolute;left:0;right:0;bottom: 30px;}
+			.warn-text img {display: inline-block;width: 20px;}
+			.warn-text .text{display: inline-block;vertical-align:middle;font-size: 12px;text-align: left;}
+		</style>
+	</head>
+
+	<body>
+		
+		<div class="mui-content" id="setting">
+		    <ul class="mui-table-view">
+		    	<li class="mui-table-view-cell mui-media">
+		    		<a id="link_myface" href="javascript:;">
+						<span class="mui-pull-right mui-icon mui-icon-arrowright"
+								style="line-height: 42px;color: lightgray;margin-left: 3px;"></span>
+		    			<img class="mui-media-object mui-pull-left" src="image/face-default-cat.png" id="headimg">
+		    			<div class="mui-media-body">
+		    				<span id="span_nickname">
+		    					幸福 
+		    				</span><img src="image/nan.png" class="sex-icon" id="sex">
+		    				<p class="mui-ellipsis">账号：<span id="span_username"></span></p>
+		    			</div>
+		    		</a>
+		    	</li>
+		    	
+		    </ul>
+			<ul class="mui-table-view m-t-10">
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" id="diamondbtn">
+							<img src="image/zuan.png" class="item-icon">钻石数量
+							<span class="mui-badge mui-badge-inverted" id="span_diamond">钻石数量 2000</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" id="zengs">
+							<img src="image/zeng.png" class="item-icon">钻石赠送
+						</a>
+					</li>
+					
+				</ul>
+				<ul class="mui-table-view m-t-10">
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right" id="sharebtn">
+								<img src="image/recommend.png" class="item-icon">推荐
+								<span class="mui-badge mui-badge-inverted">点击分享</span>
+							</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right" id="settingbtn">
+								<img src="image/set.png" class="item-icon">设置
+							</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right" id="version">
+								 <img src="image/ban.png" class="item-icon">版本
+								 <span class="mui-badge mui-badge-inverted">1.1.10</span>
+							</a>
+						</li>
+					</ul>
+	<!-- 	   <ul class="mui-table-view m-t-10">
+		        <li class="mui-table-view-cell mui-media">
+		            <a id="link_myface" href="javascript:;">
+		            	<span class="mui-pull-right mui-icon mui-icon-arrowright" 
+		            			style="line-height: 42px;color: lightgray;margin-left: 3px;"></span>
+		                <img id="img_my_face" class="mui-media-object mui-pull-right" src="image/face-default-cat.png">
+		                <div class="mui-media-body" style="line-height: 42px;font-size: 16px;">
+		                    	头像
+		                </div>
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell mui-media">
+		            <a id="link_nickname" href="javascript:;">
+		            	<span class="mui-pull-right mui-icon mui-icon-arrowright" 
+		            			style="color: lightgray;margin-left: 3px;"></span>
+		            	<span id="span_nickname" class="mui-pull-right" 
+		            			style="color: gray;font-size: 14px;"></span>
+		                <div class="mui-media-body">
+		                    昵称
+		                </div>
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell mui-media">
+		            <a href="javascript:;">
+		            	<span id="span_username" class="mui-pull-right" 
+		            			style="color: gray;font-size: 14px;"></span>
+		                <div class="mui-media-body">
+		                    账号
+		                </div>
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell mui-media">
+		            <a id="link_my_qrcode" href="javascript:;">
+		            	<span class="mui-pull-right mui-icon mui-icon-arrowright" 
+		            			style="color: lightgray;margin-left: 3px;"></span>
+		                <img class="mui-media-object mui-pull-right" 
+		                	src="image/qrcode.png" style="max-width: 20px;height: 20px;">
+		                <div class="mui-media-body">
+		                    我的二维码
+		                </div>
+		            </a>
+		        </li>
+		    </ul>
+		   
+		   
+		    
+		    <ul class="mui-table-view m-t-10">
+		    	<li class="mui-table-view-cell mui-media" 
+		    		style="text-align: center;">
+		            <a id="link_logout" href="javascript:;">
+		                <div class="mui-media-body">
+		                    退出登录
+		                </div>
+		            </a>
+		        </li>
+		    </ul> -->
+		    <div class="warn-text">
+				<img src="image/jing.png" class="">
+				<div class="text">本平台纯属娱乐禁止赌博！<br/>如有被骗与平台一律无关。</div>
+		    </div>
+		</div>
+		
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var shares=null;
+			var sweixin=null;
+			var buttons=[
+			  {title:'我的好友',extra:{scene:'WXSceneSession'}},
+			  {title:'朋友圈',extra:{scene:'WXSceneTimeline'}}
+			];
+			mui.plusReady(function(){
+				plus.share.getServices(function(s){
+					shares={};
+					for(var i in s){
+						var t=s[i];
+						shares[t.id]=t;
+						
+					}
+				sweixin=shares['weixin'];
+				}, function(e){
+					outSet('获取分享服务列表失败：'+e.message);
+				});
+				// 获得当前的webview，刷新当前用户信息
+				var meWebview = plus.webview.currentWebview();
+				meWebview.addEventListener("show", function() {
+					refreshUserInfo();
+				});
+				
+				
+			});
+// 页面跳转，我的头像
+				var link_myface = document.getElementById("link_myface");
+				link_myface.addEventListener("tap", function() {
+					// mui.openWindow("myface.html", "myface.html");
+					
+					var imooc_meWebview = plus.webview.getWebviewById("personinfo.html");
+					mui.fire(imooc_meWebview, "refreshUser");
+					mui.openWindow("personinfo.html","personinfo.html")
+				});
+				var zengsong = document.getElementById('zengs')
+				zengsong.addEventListener("tap",function(){
+					mui.openWindow("zuanshi-zengs.html","zuanshi-zengs.html")
+				})
+				// 页面跳转，修改昵称
+				var diamondbtn = document.getElementById("diamondbtn");
+				diamondbtn.addEventListener("tap", function() {
+					mui.openWindow("rechargeRecord.html", "rechargeRecord.html");
+				});
+				// // 查看我的二维码
+				// var link_my_qrcode = document.getElementById("link_my_qrcode");
+				// link_my_qrcode.addEventListener("tap", function(){
+				// 	mui.openWindow({
+				// 		url: "myQRCode.html", 
+				// 		id: "myQRCode.html", 
+				// 		styles: {}
+				// 	})
+				// });
+				
+				// // 用户退出
+				// var link_logout = document.getElementById("link_logout");
+				// link_logout.addEventListener("tap", function(){
+				// 	app.userLogout();
+				// 	mui.openWindow("login.html", "login.html");
+				// });
+				//页面跳转,设置页面
+				var settingbtn = document.getElementById("settingbtn");
+				settingbtn.addEventListener("tap",function(){
+					mui.openWindow("setting.html","setting.html")
+				})
+				
+				// 添加自定义事件，刷新头像
+				window.addEventListener("refresh", function(){
+					refreshUserInfo();
+				});
+				
+				
+				// 版本查看
+				var ban = document.getElementById('version')
+				ban.addEventListener("tap",function(){
+					mui.toast('已经是最新版本！')
+				})
+				//推荐
+				var share = document.getElementById('sharebtn')
+				share.addEventListener('click',function(){
+					shareWeb()
+				})
+				
+			function refreshUserInfo() {
+				var user = app.getUserGlobalInfo();
+				console.log(JSON.stringify(user))
+				
+				if (user != null) {
+					var faceImage = user.avatar;
+					var nickname = user.nickname;
+					var username = user.username;
+					var diamond = user.diamond;
+					var span_nickname = document.getElementById("span_nickname");
+					var span_username = document.getElementById("span_username");
+					var span_diamond = document.getElementById("span_diamond");
+					var sex_img = document.getElementById("sex");
+					span_nickname.innerHTML = nickname;
+					span_username.innerHTML = username;
+					span_diamond.innerHTML = "钻石数量 "+diamond
+					sex_img.setAttribute('src',(user.sex === 1?'image/nan.png':'image/nv.png'))
+					if (app.isNotNull(faceImage)) {
+						var img_my_face = document.getElementById("headimg");
+						img_my_face.src = faceImage;
+					}
+				}
+				
+			}
+			// 分享网页
+			function shareWeb(){
+			  var msg = {
+				  title:'这是分享标题',
+				  content:'这是分享内容',
+				  href:"www.baidu.com",
+				  type:'web',thumbs:['_www/logo.png']
+			  }
+			  sweixin?plus.nativeUI.actionSheet({title:'分享到微信',cancel:'取消',buttons:buttons}, function(e){
+				  mui.alert('cb'+e.index+':buttons'+buttons)
+				(e.index>0)&&share(sweixin, msg, buttons[e.index-1]);
+			  }):plus.nativeUI.alert('当前环境不支持微信分享操作!'); 
+			}
+			// 分享
+			function share(srv, msg, button){
+				alert('asdf')
+				mui.alert('share function')
+				outSet('分享操作：');
+			  if(!srv){
+			    outLine('无效的分享服务！');
+			    return;
+			  }
+			  button&&(msg.extra=button.extra);
+				// 发送分享
+				if(srv.authenticated){
+					outLine('---已授权---');
+					doShare(srv, msg);
+				}else{
+					outLine('---未授权---');
+					srv.authorize(function(){
+						doShare(srv, msg);
+					}, function(e){
+						outLine('认证授权失败：'+JSON.stringify(e));
+					});
+				}  
+			}
+			// 发送分享
+			function doShare(srv, msg){
+				outLine(JSON.stringify(msg));
+				srv.send(msg, function(){
+					mui.alert('分享到"'+srv.description+'"成功！');
+				}, function(e){
+					outLine('分享到"'+srv.description+'"失败: '+JSON.stringify(e));
+				});
+			}
+		</script>
+	</body>
+
+</html>

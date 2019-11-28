@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<link rel="stylesheet" type="text/css" href="css/chat.css" />
+		<style>
+			html,
+			body {
+				height: 100%;
+				margin: 0px;
+				padding: 0px;
+				overflow: hidden;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+			}
+			.mui-popover{  
+			position: fixed;  
+			width: 80%;  
+			height: 70%;  
+			border-radius: 0;  
+			left: 50%;  
+			top: 50%;  
+			margin: 0 auto;  
+			z-index: 9999;  
+			background-color: #fff;  
+			-webkit-transform: translateX(-50%) translateY(-50%);  
+			 -moz-transform: translateX(-50%) translateY(-50%);  
+			 -ms-transform: translateX(-50%) translateY(-50%);  
+			 transform: translateX(-50%) translateY(-50%);  
+			}
+			.redpackgePopver{background:url(image/88.png) 0 0/cover;height: 320px;}
+			.popver-content{color:#fff;padding-top: 50px;position: relative;height: 320px;}
+			.popver-content p{color: #fff;font-size: 18px;}
+			.popver-content .redHead{border-radius: 50%;}
+			.popver-content a{color: #fff;position: absolute;bottom:8px;left:0;right:0}
+			.money {position: absolute;width:100px;height:100px;
+			bottom:10px;left:0;right:0;margin:0 auto;background: url('image/money.png') no-repeat center;background-size: contain;}
+			#detailbtn{display: none;}
+		</style>
+	</head>
+
+	<body contextmenu="return false;">
+
+		<header class="mui-bar mui-bar-nav title" style="position: fixed;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left title-color"></a>
+			<a id="more" class="mui-icon mui-icon-bars mui-icon-right-nav mui-pull-right title-color"></a>
+			<h1 class="mui-title title-color"><b id="chatting-nickname">慕 信</b></h1>
+
+		</header>
+
+		<div id="msg-outter" class="mui-content">
+			<div id='msg'>
+
+<!-- 				<div class="friend_lists">
+					<div class="header_img">
+						<img src="image/face-default-cat.png" width="40px" height="40px" />
+					</div>
+					<div class="msg-wrapper right">
+						<div class="msg-left-name">名字</div>
+						<p class="msg-left-white">晚上过来吃饭？</p>
+					</div>
+
+				</div>
+				<div class="friend_lists">
+					<div class="header_img">
+						<img src="image/face-default-cat.png" width="40px" height="40px" />
+					</div>
+					<div class="msg-redpackage right">
+						<div class="redimg">
+							<img src="image/redpeick.png">
+						</div>
+						<div class="msg-name">100-2</div>
+						<div class="msg-desc">领取红包</div>
+						<p class="msg-gname">扫雷红包游戏</p>
+					</div>
+				</div>
+				<div class="me_lists">
+					<div class="header_img">
+						<img src="image/face-default-cat.png" width="40px" height="40px" />
+					</div>
+					<div class="msg-redpackage left">
+						<div class="redimg">
+							<img src="image/redpeick.png">
+						</div>
+						<div class="msg-name">100-2</div>
+						<div class="msg-desc">领取红包</div>
+						<p class="msg-gname">扫雷红包游戏</p>
+					</div>
+				</div>
+				<div class="me_lists">
+					<div class="header_img">
+						<img src="image/face-default-cat.png" width="40px" height="40px" />
+					</div>
+					<div class="msg-wrapper left">
+						<div class="msg-right-name">名字</div>
+						<p class="msg-right-green">好的，没问题！时间地点？</p>
+					</div>
+				</div> -->
+
+			</div>
+			<div id="popover" class="redpackgePopver mui-popover" style="height: 350px;">
+				<a href="#popover"><img src="image/clear.png" width="20px"></a>
+				<div class="mui-text-center popver-content">
+					<img src="image/3.png" class="redHead" id="redHead">
+					<p class="redname" id="redname">名字</p>
+					<p class="redstatus" id="redstatus">红包过期</p>
+					<div class="money" id="moneybtn"></div>
+					<a href="#" id="detailbtn">查看大家的手气>></a>
+				</div>
+			</div>
+		</div>
+
+		<footer>
+			<div class="footer-center">
+				<textarea id='msg-text' type="text" class='input-text'></textarea>
+			</div>
+			<label for="" class="footer-right">
+				<button type="button" class="mui-btn mui-btn-gray" id="send">发送</button>
+				<button type="button" class="mui-btn mui-btn-gray" id="sendrd">发红包</button>
+			</label>
+		</footer>
+
+		<script src="js/mui.min.js"></script>
+		<script type="application/javascript" src="js/app.js"></script>
+		<script type="text/javascript">
+			// 创建命名空间，只需要把自己的代码，写进入，那么外部就无法访问
+			//			(function($, doc){
+
+			// 获取上一个页面传入的好友属性值
+			var friendUserId;
+			var friendNickname;
+			var friendFaceImage;
+			var buttons = [{
+				title: '群信息'
+			}, {
+				title: '群主设置'
+			}];
+			var redEnvelopeId = 0
+			var rddata = null
+			mui.plusReady(function() {
+				plus.navigator.setStatusBarStyle("light");
+				plus.navigator.setStatusBarBackground("#0eac68");
+				document.getElementById('more').addEventListener("tap", function(e) {
+					console.log('more', e)
+					plus.nativeUI.actionSheet({
+						title: '群操作',
+						cancel: '取消',
+						buttons: buttons
+					}, function(e) {
+						console.log('more', e)
+						var data = {
+							id: '',
+							url: ''
+						}
+						if (e.index == 1) {
+							data = {
+								id: 'groupSetting.html',
+								url: 'groupSetting.html'
+							}
+						} else if (e.index == 2) {
+							data = {
+								id: 'groupMasterSetting.html',
+								url: 'groupMasterSetting.html'
+							}
+						}
+						mui.openWindow(data.id, data.url)
+					})
+					e.preventDefault()
+				})
+
+				// 获取我自己的用户信息					
+				var me = app.getUserGlobalInfo();
+
+				// 获取聊天页面webview
+				var chattingWebview = plus.webview.currentWebview();
+				// 设置聊天页面的软键盘样式
+				chattingWebview.setStyle({
+					softinputMode: "adjustResize"
+				});
+				
+				// 获取上一个页面传入的好友属性值
+				friendUserId = chattingWebview.groupId;
+				friendNickname = chattingWebview.groupName;
+				friendFaceImage = chattingWebview.friendFaceImage;
+
+				// 标题改为朋友的昵称
+				document.getElementById("chatting-nickname").innerHTML = friendNickname;
+
+
+				// 渲染初始化的聊天记录HTML
+				initChatHistory();
+
+				var areaMsgList = document.getElementById("msg");
+				// 设置聊天记录进入页面的时候自动滚动到最后一条
+				areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
+
+				// 获取dom控件
+				var msg_text = document.getElementById("msg-text");
+				var send = document.getElementById("send");
+
+				// 监听用户输入，使得send按钮变色
+				msg_text.addEventListener("input", function() {
+					var msg_text_val = msg_text.value;
+					if (msg_text_val.length > 0) {
+						send.setAttribute("class", "mui-btn-green");
+					} else {
+						send.setAttribute("class", "mui-btn-gray");
+					}
+				});
+
+				// 对当前的窗口监听resize事件
+				window.addEventListener("resize", function() {
+					resizeScreen();
+					document.getElementById("msg-outter").style.paddingBottom = "50px";
+				});
+				document.getElementById('moneybtn').addEventListener("tap", function() {
+
+
+					var data = new app.getRedPackage(app.GET_REDPACKAGE, redEnvelopeId);
+					// 调用websocket 发送消息到netty后端
+					var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
+					wsWebview.evalJS("CHAT.chat('" + JSON.stringify(data) + "')");
+				})
+				document.getElementById('detailbtn').addEventListener("tap", function() {
+					GetRedPackage(rddata)
+				})
+
+
+				// 发送消息按钮的事件绑定
+				document.getElementById('sendrd').addEventListener("tap", function() {
+
+					// 发送之前判断网络的状态
+					var connectionStatus = plus.networkinfo.getCurrentType();
+					if (connectionStatus == 0 || connectionStatus == 1) {
+						app.showToast("请打开网络连接...", "error");
+						return;
+					}
+					mui.openWindow({
+						url: "redpackhandler.html",
+						id: "redpackhandler.html", // 每个朋友的聊天页面都是唯一对应的
+						extras: {
+							groupId: friendUserId
+						}
+					});
+				});
+
+				// 为红包绑定点击事件
+				mui("#msg").on("tap", ".msg-redpackage", function(e) {
+					// 发送之前判断网络的状态
+					var connectionStatus = plus.networkinfo.getCurrentType();
+					if (connectionStatus == 0 || connectionStatus == 1) {
+						app.showToast("请打开网络连接...", "error");
+						return;
+					}
+					redEnvelopeId = this.getAttribute("redEnvelopeId");
+
+					var data = new app.getRedPackage(app.READY_REDPACKAGE, redEnvelopeId);
+					// 调用websocket 发送消息到netty后端
+					var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
+					wsWebview.evalJS("CHAT.chat('" + JSON.stringify(data) + "')");
+
+				})
+				// 发送消息按钮的事件绑定
+				send.addEventListener("tap", function() {
+
+					// 发送之前判断网络的状态
+					var connectionStatus = plus.networkinfo.getCurrentType();
+					if (connectionStatus == 0 || connectionStatus == 1) {
+						app.showToast("请打开网络连接...", "error");
+						return;
+					}
+
+					// 获取消息内容
+					var msg_text_val = msg_text.value;
+
+					// 判断消息内容，如果长度等于0，则return
+					if (msg_text_val.length === 0) {
+						return;
+					}
+
+					// 发送消息, 渲染消息的html到msg div之下
+					sendMsg(me.avatar, me.nickname, msg_text_val);
+					// 情况消息文本框中的内容
+					msg_text.value = "";
+					// 发送消息完毕之后，把发送按钮的颜色改为灰白色
+					send.setAttribute("class", "mui-btn-gray");
+
+					// 构建ChatMsg
+					var chatMsg = new app.ChatMsg(app.CHAT, 1, friendUserId, msg_text_val);
+					// 构建DataContent
+					// var dataContent = new app.DataContent(app.CHAT, chatMsg, null);
+
+					// 调用websocket 发送消息到netty后端
+					var wsWebview = plus.webview.getWebviewById("imooc-chatlist.html");
+					wsWebview.evalJS("CHAT.chat('" + JSON.stringify(chatMsg) + "')");
+					//						wsWebview.evalJS("CHAT.chat('" + msg_text_val + "')");
+
+					// 保存聊天历史记录到本地缓存
+					app.saveUserChatHistory(me.id, friendUserId, msg_text_val, 1);
+					app.saveUserChatSnapshot(me.id, friendUserId, msg_text_val, true);
+					//						receiveMsg("模拟接受消息~~~~~~");
+				});
+			});
+
+			function OpenRedPackage(data) {
+				debugger
+				mui("#popover").popover('toggle', document.getElementById("div"));
+				if (data) data = JSON.parse(data)
+				var sna = data.data.isSnatched,
+					exp = data.data.isExpire,
+					empty = data.data.isEmpty;
+
+				if (!sna && !exp && !empty) {
+					mui('#redstatus')[0].innerHTML = '恭喜发财，大吉大利'
+					mui('#detailbtn')[0].style.display = 'none'
+					mui('#moneybtn')[0].style.display = 'block'
+				
+				} else {
+					mui('#detailbtn')[0].style.display = 'block'
+					mui('#moneybtn')[0].style.display = 'none'
+					if (sna) {
+						mui('#redstatus')[0].innerHTML = '您已经抢过红包'
+					} else if (exp) {
+						mui('#redstatus')[0].innerHTML = '红包已过期'
+					} else if (empty) {
+						mui('#redstatus')[0].innerHTML = '红包已被抢完'
+					}
+				}
+				
+			}
+			
+			function GetRedPackage(dataContent){
+				rddata = dataContent
+				if(dataContent){
+					mui("#popover").popover('toggle', document.getElementById("div"));
+					mui.openWindow({
+						url: "redPKdetail.html",
+						id: "redPKdetail.html",
+						extras: {
+							groupId: friendUserId,
+							data: dataContent
+						}
+					});
+				}
+				
+			}
+			// 接受消息
+			function receiveMsg(msg, nickname, type, isMine, redEnvelope) {
+				if (redEnvelope) redEnvelope = JSON.parse(redEnvelope)
+				console.log('receiveMsg', msg, nickname, isMine, redEnvelope)
+				debugger
+				var msgHtml = ''
+				if (parseInt(type) === 3) {
+					if (isMine) {
+						msgHtml = '<div class="me_lists">' +
+							'<div class="header_img"><img src="' + friendFaceImage + '" width="40px" height="40px" /></div>' +
+							'<div class="msg-redpackage left" redEnvelopeId = "' + redEnvelope.id + '">' +
+							'<div class="redimg">' +
+							'<img src="image/redpeick.png">' +
+							'</div>' +
+							'<div class="msg-name">' + redEnvelope.money + '--' + redEnvelope.number + '</div>' +
+							'<div class="msg-desc">领取红包</div>' +
+							'<p class="msg-gname">扫雷红包游戏</p>' +
+							'</div>' +
+							'</div>';
+					} else {
+						msgHtml = '<div class="friend_lists">' +
+							'<div class="header_img"><img src="' + friendFaceImage + '" width="40px" height="40px" /></div>' +
+							'<div class="msg-redpackage right"  redEnvelopeId = "' + redEnvelope.id + '">' +
+							'<div class="redimg">' +
+							'<img src="image/redpeick.png">' +
+							'</div>' +
+							'<div class="msg-name">' + redEnvelope.money + '--' + redEnvelope.number + '</div>' +
+							'<div class="msg-desc">领取红包</div>' +
+							'<p class="msg-gname">扫雷红包游戏</p>' +
+							'</div>' +
+							'</div>';
+					}
+
+				} else {
+					msgHtml = '<div class="friend_lists">' +
+						'<div class="header_img">' +
+						'<img src="' + friendFaceImage + '" width="40px" height="40px" />' +
+						'</div>' +
+						'<div class="msg-wrapper right">' +
+						'<div class="msg-left-name">' + nickname + '</div>' +
+						'<p class="msg-left-white">' + msg + '</p>' +
+						'</div>' +
+						'</div>';
+
+				}
+
+				var msg_list = document.getElementById("msg");
+				msg_list.insertAdjacentHTML("beforeend", msgHtml);
+
+				playReceiveMsgSound();
+			}
+
+			// 发送消息
+			function sendMsg(faceImg, name, msg) {
+				debugger
+				var msgHtml = '<div class="me_lists">' +
+					'<div class="header_img">' +
+					'<img src="' + faceImg + '" width="40px" height="40px" />' +
+					'</div>' +
+					'<div class="msg-wrapper left">' +
+					'<div class="msg-right-name">' + name + '</div>' +
+					'<p class="msg-right-green">' + msg + '</p>' +
+					'</div>' +
+					'</div>';
+				var msg_list = document.getElementById("msg");
+				msg_list.insertAdjacentHTML("beforeend", msgHtml);
+
+				playSendMsgSound();
+			}
+
+			// 播放发送消息的铃声
+			function playSendMsgSound() {
+				var audioPlayer = plus.audio.createPlayer("/mp3/send.mp3");
+				audioPlayer.play();
+			}
+
+			// 播放接受消息的铃声
+			function playReceiveMsgSound() {
+				var audioPlayer = plus.audio.createPlayer("/mp3/di_didi.mp3");
+				audioPlayer.play();
+			}
+
+			// 重新调整聊天窗口
+			function resizeScreen() {
+				var areaMsgList = document.getElementById("msg");
+				// 设置聊天记录进入页面的时候自动滚动到最后一条
+				areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
+			};
+
+			//			}(mui, document));
+
+			// 初始化用户的聊天记录
+			function initChatHistory() {
+				var msg_list = document.getElementById("msg");
+
+				var me = app.getUserGlobalInfo();
+				var myId = me.id;
+				var myFaceImg = me.faceImage;
+
+				var chatHistoryList = app.getUserChatHistory(myId, friendUserId);
+
+				var togetherHTML = "";
+
+				for (var i = 0; i < chatHistoryList.length; i++) {
+					var singleMsg = chatHistoryList[i];
+					singleMsg.userGroupName = 'name'
+					if (singleMsg.flag == 1) {
+						togetherHTML += '<div class="me_lists">' +
+							'<div class="header_img">' +
+							'<img src="' + app.imgServerUrl + myFaceImg + '" width="40px" height="40px" />' +
+							'</div>' +
+							'<div class="msg-wrapper left">' +
+							// '<div class="msg-right-name">'+singleMsg.userGroupName+'</div>'
+							'<p class="msg-right-green">' + singleMsg.msg + '</p>' +
+							'</div>' +
+							'</div>';
+					} else {
+						togetherHTML += '<div class="friend_lists">' +
+							'<div class="header_img">' +
+							'<img src="' + app.imgServerUrl + friendFaceImage + '" width="40px" height="40px" />' +
+							'</div>' +
+							'<div class="msg-wrapper right">' +
+							// '<div class="msg-left-name">'+singleMsg.userGroupName+'</div>'
+							'<p class="msg-left-white">' + singleMsg.msg + '</p>' +
+							'</div>' +
+							'</div>';
+					}
+				}
+				msg_list.innerHTML = togetherHTML;
+			}
+		</script>
+	</body>
+
+</html>

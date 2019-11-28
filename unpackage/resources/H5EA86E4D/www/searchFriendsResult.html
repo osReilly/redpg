@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/mui.js"></script>
+		<link href="css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+
+		<style>
+			#btn_add_friend {
+	        	background-color: #1aad19;
+	        }
+	        #btn_add_friend:active {
+	            background-color: #128e12;
+	        }
+			#center{padding:50px 0}
+			/* #centerinput{position: relative;left:20%;right:20%;} */
+			#centerinput .mui-input-row{border:1px solid #ddd;border-radius: 4px;width: 200px;margin: 30px auto;}
+			#centerinput label{float: right;}
+			#centerinput input{padding: 10px;}
+		</style>
+	</head>
+
+	<body >
+
+		<header class="mui-bar mui-bar-nav title" style="position: fixed;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left title-color"></a>
+			<h1 class="mui-title title-color"><b id="chatting-nickname">钻石赠送</b></h1>
+		</header>
+		
+		<div class="mui-content" style="background-color: #fff;position:  absolute;top:0;bottom:0;left:0;right:0">
+			
+			<div style="text-align: center;">
+				<div id="center">
+					<img id="img_friend_face" class="mui-media-object " src="image/22.png"
+						style="border-radius: 8%;line-height: 50px;max-width: 50px;height: 50px;">
+					<div class="mui-media-body">
+					   	<label id="lab_friend_nickname">1212</label>
+						<p class="mui-ellipsis" id="p_friend_username">盘一般.</p>
+					</div>
+					
+					<div id="centerinput">
+						<div class="mui-input-row">
+							<label>颗</label>
+							<input type="number" placeholder="请输入数额" id="amounttext">
+						</div>
+						
+					</div>
+				</div>
+				<button id="btn_add_friend" type="button" class="mui-btn mui-btn-block" 
+					style="color: white;width: 90%;display: inline;padding: 8px 0">确定</button>
+				
+			</div>
+			
+		</div>
+		
+		<script type="application/javascript" src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			
+			mui.plusReady(function(){
+				
+				var meInfo = app.getUserGlobalInfo();
+				
+				// 获取上一个页面传入的对象，并且对本页面响应的dom赋值初始化
+				var currnetWebview = plus.webview.currentWebview();
+				
+				var img_friend_face = document.getElementById("img_friend_face");
+				var lab_friend_nickname = document.getElementById("lab_friend_nickname");
+				var p_friend_username = document.getElementById("p_friend_username");
+				var amounttext= document.getElementById("amounttext")
+				img_friend_face.src = currnetWebview.friendFaceImage;
+				lab_friend_nickname.innerHTML = currnetWebview.friendNickname;
+				p_friend_username.innerHTML = currnetWebview.friendUsername;
+				
+				// 发送添加好友的请求
+				var btn_add_friend = document.getElementById("btn_add_friend");
+				btn_add_friend.addEventListener("tap", function(){
+					
+					plus.nativeUI.showWaiting("请稍后...");
+					mui.ajax(app.serverUrl + "/user/donateDiamond?amount=" + amounttext.value+"&userId="+currnetWebview.friendUserId, {
+						data:{},
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						headers:{'Content-Type':'application/json','token':meInfo.token},	              
+						success:function(data){
+							//服务器返回响应
+							plus.nativeUI.closeWaiting();
+							
+							if (data.success) {
+								app.showToast(data.msg, "success");
+								mui.back()
+								// mui.openWindow({
+								// 	url: "index.html",
+								// 	id: "index.html"
+								// });
+								
+							} else {
+								console.log(data.msg)
+								app.showToast(data.msg, "error");
+							}
+						}
+					});
+					
+				});
+				
+				// 绑定返回的函数
+				var btn_back = document.getElementById("btn_back");
+				btn_back.addEventListener("tap", function() {
+					mui.back();
+				});
+			});
+		</script>
+	</body>
+
+</html>

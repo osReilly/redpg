@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/mui.js"></script>
+		<link href="css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+
+		<style>
+			#btn_add_friend {
+	        	background-color: #1aad19;
+	        }
+	        #btn_add_friend:active {
+	            background-color: #128e12;
+	        }
+			.mui-switch{font-size: 12px;}
+			.mui-switch.mui-active:before{left:3px;content: '私有群';}  
+			.mui-switch:before{content: '公开群';}  
+			.textarea-row{height:auto!important;}
+			#mform .textarea-row label{width:30%}
+			#mform .textarea-row textarea{padding:5px;margin:10px 10px 10px 0;border:1px solid #ddd!important}
+			.mui-input-row label,.mui-input-row label~input,.mui-input-row label~textarea{font-size: 14px;}
+			#mform .mui-input-row.input-flex{display: flex;align-content: center;line-height: 40px;}
+			#mform .mui-input-row .input-small{float:none;width: 90px;border: 1px solid #ddd;height: 30px;margin-top: 4px;}
+		</style>
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav title" style="position: fixed;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left title-color"></a>
+			<h1 class="mui-title title-color"><b id="chatting-nickname">玩法设置</b></h1>
+		</header>
+
+		<div class="mui-content">
+			<form class="mui-input-group" id="mform">
+				<div class="mui-input-row input-flex">
+					<label>红包金额范围</label>
+					<input type="text" id="minRedEnvelope" class="mui-input-clear input-small">～
+					<input type="text" id="maxRedEnvelope" class="mui-input-clear  input-small">
+				</div>
+				<div class="mui-input-row">
+					<label>红包几包</label>
+					<input type="number" id="redEnvelopeNum" class="mui-input-clear" placeholder="请设置红包几包">
+				</div>
+				<div class="mui-input-row">
+					<label>红包几倍</label>
+					<input type="number" id="redEnvelopeRate" class="mui-input-clear" placeholder="请设置红包几倍">
+				</div>
+
+
+				<br />
+				<div style="text-align: center;">
+					<button id="btn_add_friend" type="submit" class="mui-btn mui-btn-block" style="color: white;width: 90%;display: inline;padding: 10px 0">确定</button>
+
+				</div>
+			</form>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						免死免赔人员（选填）
+					</a>
+				</li>
+
+			</ul>
+		</div>
+
+		<script type="application/javascript" src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init();
+
+			mui.plusReady(function() {
+
+				var meInfo = app.getUserGlobalInfo();
+				if (meInfo == null) { //没有用户信息去登录
+					// 页面跳转
+					mui.openWindow("login.html", "login.html");
+				}
+
+				var userform = document.getElementById("mform");
+				var maxRedEnvelope = document.getElementById("maxRedEnvelope");
+				var minRedEnvelope = document.getElementById("minRedEnvelope");
+				var redEnvelopeNum = document.getElementById("redEnvelopeNum");
+				var redEnvelopeRate = document.getElementById("redEnvelopeRate");
+				userform.addEventListener("submit", function(e) {
+					// 判断用户名是否为空，如果为空则让其获得焦点
+					if (!app.isNotNull(maxRedEnvelope.value)) {
+						maxRedEnvelope.focus();
+						mui.toast('红包金额范围有误')
+					} else if (!app.isNotNull(minRedEnvelope.value)) {
+						minRedEnvelope.focus();
+						mui.toast('红包金额范围有误')
+					} else if (!app.isNotNull(redEnvelopeNum.value)) {
+						redEnvelopeNum.focus();
+						mui.toast('红包几包不能为空')
+					}else if (!app.isNotNull(redEnvelopeRate.value)) {
+						redEnvelopeRate.focus();
+						mui.toast('红包倍率不能为空')
+					} else {
+						// 判断用户名和密码的长度，进行限制
+						// if (username.value.length > 12) {
+						// 	app.showToast("用户名不能超过12", "error");
+						// 	return false;
+						// } else if (notices.value.length > 80) {
+						// 	app.showToast("密码不能超过12", "error");
+						// 	return false;
+						// }
+						var groupid = plus.webview.currentWebview().groupId
+						debugger
+						mui.ajax(app.serverUrl + 'group/gamePlay', {
+							data: {
+								"id":groupid,
+								"maxRedEnvelope": maxRedEnvelope.value,
+								"minRedEnvelope": minRedEnvelope.value,
+								"redEnvelopeNum": redEnvelopeNum.value,
+								"redEnvelopeRate": redEnvelopeRate.value
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json',
+								'token': meInfo.token
+							},
+							success: function(data) {
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								console.log(JSON.stringify(data));
+
+								maxRedEnvelope.blur();
+								minRedEnvelope.blur();
+								redEnvelopeNum.blur();
+								redEnvelopeRate.blur();
+								if (data.success) {
+									// 登录或者注册成功之后，保存全局用户对象到本地缓存
+									mui.toast(data.msg)
+									// 页面跳转
+									// mui.openWindow("imooc-chatlist.html", "imooc-chatlist.html");
+									console.log('app.chat----', dataContent)
+									// var chatlist = plus.webview.getWebviewById("imooc-chatlist.html");
+									// if (chatlist != null) {
+									// 	if (dataContent.data.userId == app.getUserGlobalInfo().id) return;
+									// 	chatWebview.evalJS("receiveMsg('" + msg + "')");
+									// 	chatWebview.evalJS("resizeScreen()");
+									// } else {
+									// addLists
+									mui.openWindow("index.html", "index.html");
+								} else {
+									app.showToast(data.msg, "error");
+								}
+							}
+						});
+
+					}
+					e.preventDefault();
+				});
+				// // 获取上一个页面传入的对象，并且对本页面响应的dom赋值初始化
+				// var currnetWebview = plus.webview.currentWebview();
+				// var yourFriend = currnetWebview.willBeFriend;
+				// //				console.log(JSON.stringify(yourFriend));
+
+				// var img_friend_face = document.getElementById("img_friend_face");
+				// var lab_friend_nickname = document.getElementById("lab_friend_nickname");
+				// var p_friend_username = document.getElementById("p_friend_username");
+
+				// img_friend_face.src = app.imgServerUrl + yourFriend.faceImage;
+				// lab_friend_nickname.innerHTML = yourFriend.nickname;
+				// p_friend_username.innerHTML = "慕信号：" + yourFriend.username;
+
+				// // 发送添加好友的请求
+				// var btn_add_friend = document.getElementById("btn_add_friend");
+				// btn_add_friend.addEventListener("tap", function() {
+
+				// 	plus.nativeUI.showWaiting("请稍后...");
+				// 	mui.ajax(app.serverUrl + "/u/addFriendRequest?myUserId=" + meInfo.id +
+				// 		"&friendUsername=" + yourFriend.username, {
+				// 			data: {},
+				// 			dataType: 'json', //服务器返回json格式数据
+				// 			type: 'post', //HTTP请求类型
+				// 			timeout: 10000, //超时时间设置为10秒；
+				// 			headers: {
+				// 				'Content-Type': 'application/json'
+				// 			},
+				// 			success: function(data) {
+				// 				//服务器返回响应
+				// 				plus.nativeUI.closeWaiting();
+
+				// 				if (data.status == 200) {
+
+				// 					app.showToast("好友请求已发送...", "success");
+
+				// 					mui.openWindow({
+				// 						url: "index.html",
+				// 						id: "index.html"
+				// 					});
+				// 				} else {
+				// 					app.showToast(data.msg, "error");
+				// 				}
+				// 			}
+				// 		});
+
+				// });
+
+				// // 绑定返回的函数
+				// var btn_back = document.getElementById("btn_back");
+				// btn_back.addEventListener("tap", function() {
+				// 	mui.back();
+				// });
+			});
+		</script>
+	</body>
+
+</html>

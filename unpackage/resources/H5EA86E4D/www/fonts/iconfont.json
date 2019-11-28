@@ -1,0 +1,44 @@
+{
+  "id": "1489420",
+  "name": "redpackage",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "915621",
+      "name": "消息",
+      "font_class": "xiaoxi",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "1287769",
+      "name": "我",
+      "font_class": "me",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "1703518",
+      "name": "说明",
+      "font_class": "shuoming",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "3670113",
+      "name": "我的",
+      "font_class": "tubiaolunkuo-",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "4933372",
+      "name": "群组",
+      "font_class": "qunzu",
+      "unicode": "e748",
+      "unicode_decimal": 59208
+    }
+  ]
+}
