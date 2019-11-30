@@ -348,6 +348,7 @@ window.app = {
 	KEEPALIVE: 4, // 客户端保持心跳
 	READY_REDPACKAGE: 5, // 点击抢
 	GET_REDPACKAGE: 6, // 抢红包
+	JOIN_GROUP:7,
 	GROUP_UPDATE:9,//群数据变更
 	/**
 	 * 和后端的 ChatMsg 聊天模型对象保持一致

@@ -109,10 +109,10 @@
 								var ul_friend_request_list = document.getElementById("ul_friend_request_list");
 								if (friend != null) {
 									var requestHtml = ""
-									requestHtml = '<li groupId="' + friend.ownerId + '" groupName="' + friend.displayName +
+									requestHtml = '<li groupId="' + friend.id + '" groupName="' + friend.displayName +
 										'" class="chat-with-friend mui-table-view-cell mui-media">' +
 										'<div class="mui-slider-right mui-disabled">' +
-										'<a id="link_delChatRecord" groupId="' + friend.ownerId + '" class="mui-btn mui-btn-red">删除</a>' +
+										'<a id="link_delChatRecord" groupId="' + friend.id + '" class="mui-btn mui-btn-red">删除</a>' +
 										'</div>' +
 										'<div class="mui-slider-handle mui-media-body "><div class="mui-media-object mui-pull-left" style="border: 1px solid #ccc;">' +
 										'<img class=" mui-pull-left" src="image/3.png" style="width:40px"/></div>' + friend.displayName +
@@ -168,7 +168,7 @@
 					mgroupId = groupId
 					mui.prompt('', '请输入续费天数', null, ['取消', '确认'], function(e) {
 						console.log('prompt', JSON.stringify(e))
-						if (e.index == '1'&& e.value) {
+						if (e.index == '1' && e.value) {
 							// 打开聊天子页面
 							mui.openWindow({
 								url: "chatting.html",
@@ -358,10 +358,18 @@
 							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态
 						}
 					}
-					// if (action === app.PULL_FRIEND) {
-					// 	fetchContactList();
-					// 	return false;
-					// }
+					if (action === app.SIGNED) {
+						var chatWebview = plus.webview.getWebviewById("immoc-message.html");
+						if (chatWebview != null) {
+							chatWebview.evalJS("singnedMsg('" + JSON.stringify(dataContent) + "')");
+						}
+					}
+					if (action === app.JOIN_GROUP) {
+						var chatWebview = plus.webview.getWebviewById("immoc-message.html");
+						if (chatWebview != null) {
+							chatWebview.evalJS("joinGroup('" + JSON.stringify(dataContent) + "')");
+						}
+					}
 
 					// 如果不是重新拉取好友列表，则获取聊天消息模型，渲染接收到的聊天记录
 					// var chatMsg = dataContent.chatMsg;

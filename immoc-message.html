@@ -15,6 +15,8 @@
 			.mui-table-view-chevron .mui-table-view-cell:last-child::after{height: 0;}
 			.mui-table-view-chevron .mui-table-view-cell.no-paddingLR{padding:40px 0}
 			.mui-table-view-chevron .mui-table-view-cell.no-paddingLR.mui-active{background: #FFFFFF;}
+			.mui-navigate-right2{padding-right: 0!important;}
+			.mui-btn-mini{padding:2px 4px;}
 		</style>
 	</head>
 
@@ -34,17 +36,10 @@
 		<div id="refreshContainer" class="refreshContainer mui-content mui-scroll-wrapper">
 		  <div class="mui-scroll">
 			<!--数据列表-->
-			<ul class="mui-table-view mui-table-view-chevron">
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						Item 1
-					</a>
-				</li>
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						 Item 2
-					</a>
-				</li>
+	
+			<ul class="mui-table-view mui-table-view-chevron" id="datalist">
+				
+				
 				<li class="mui-table-view-cell no-paddingLR">
 					<div class="cdata">
 						<img src="image/1.png" >
@@ -60,6 +55,28 @@
 		<script src="js/mui.js"></script>
 		<script type="text/javascript">
 			mui.init()
+			mui.plusReady(function(){
+				function singnedMsg(data){
+					var res = JSON.parse(data)
+					var ItemHtml=''
+					ItemHtml='<li class="mui-table-view-cell">'+
+				'<a class="mui-navigate-right2">'+res.nickname+
+				'	<span class="mui-pull-right">'+
+				'		<span class="mui-btn mui-btn-default mui-btn-mini" id="ag">同意</span>'+
+				'		<span class="mui-btn mui-btn-default mui-btn-mini" id="noag">发对</span>'+
+				'</span></a></li>'
+					mui('#datalist')[0].insertAdjacentHTML('beforeend', ItemHtml);
+				}
+				mui("#datalist").on("tap", "#ag", function(e) {
+					
+				})
+				mui("#datalist").on("tap", "#noag", function(e) {
+					
+				})
+				function joinGroup(data){
+					var res = JSON.parse(data)
+				}
+			})
 		</script>
 	</body>
 
