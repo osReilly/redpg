@@ -1,0 +1,263 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>群信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<style type="text/css">
+			.mui-btn-block {
+				padding: 10px 0
+			}
+
+			.mui-input-row label~input,
+			.mui-input-row label {
+				font-size: 15px;
+			}
+
+			.logo-icon {
+				width: 100px;
+				margin: 70px auto 30px auto;
+				border-radius: 50%;
+			}
+
+			.text {
+				font-size: 14px;
+				color: #666666;
+			}
+
+			.custorm-form.mui-input-group:before,
+			.custorm-form.mui-input-group:after {
+				height: 0;
+			}
+
+			.custorm-form .mui-input-row {
+				height: 50px;
+				line-height: 50px;
+				font-size: 1;
+			}
+
+			.custorm-form .mui-input-row label {
+				padding: 16px 15px;
+			}
+
+			.custorm-form .codebtn {
+				position: absolute;
+				right: 10px;
+				top: 5px;
+				width: auto;
+				padding: 8px 15px
+			}
+
+			.three-row .mui-input-clear {
+				padding-right: 90px;
+			}
+
+			.three-row .mui-input-clear~.mui-icon-clear {
+				right: 90px;
+			}
+
+			.m-t-10 {
+				margin-top: 10px;
+			}
+
+			.text-right {
+				display: inline-block;
+				vertical-align: middle;
+				margin: 0 10px;
+			}
+
+			.mui-btn.mui-btn-mini {
+				padding: 2px 4px;
+				color: #fff
+			}
+
+			.mui-navigate-center {
+				color: #1AAD19 !important;
+				text-align: center;
+			}
+
+			.mui-content-padded {
+				margin: 30px auto
+			}
+
+			.mui-content-padded>.mui-btn-default {
+				border: 0;
+				font-size: 15px;
+				color: red;
+			}
+
+			#groupsetting .mui-table-view:first-child {
+				margin-top: 0;
+			}
+
+			.groupsetting .mui-table-view .mui-table-view-cell a {
+				font-size: 14px;
+				color: #444;
+			}
+
+			.mini-input {
+				width: 100px !important;
+				height: 32px !important;
+				margin: 0 !important;
+				vertical-align: middle;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title title-color">群员资料</h1>
+		</header>
+		<div class="mui-content groupsetting" id="groupsetting">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<img class="mui-media-object mui-pull-left" id="avatar" src="image/3.png">
+						<div class="mui-media-body">
+							<span id="nickname">*</span>
+							<span id="sex">
+								男
+							</span>
+							<p class="mui-ellipsis">个性签名：<span id="signature">
+									*
+								</span></p>
+						</div>
+					</a>
+				</li>
+
+
+			</ul>
+			<ul class="mui-table-view m-t-10">
+
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2">
+						<span class="mui-pull-left">群员账号：&nbsp;</span> <span id="userId" class="mui-pull-left">0</span>
+						<span class="mui-pull-right" id="gfriend">推荐好友：0</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2">
+						<span class="mui-pull-left">积分余额：</span><span id="score" class="mui-pull-left">0</span>
+						<span class="mui-pull-right">
+							<span class="mui-btn mui-btn-success mui-btn-mini" id="gcopy">查看账单</span>
+						</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2">
+						<span class="mui-pull-left">抽水返点：&nbsp;</span> <span class="mui-pull-left">0.00%</span> <span class="mui-pull-right"
+						 id="gname">下级用户：0</span>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view m-t-10">
+
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2">
+						<span>给他上分：</span>
+						<input type="number" class="mini-input" id="guptext" placeholder="上分数量" />
+						<span class="mui-pull-right">
+							<span class="mui-btn mui-btn-success mui-btn-mini" id="gup">上分</span>
+						</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right2">
+						<span>给他下分：</span>
+						<input type="number" class="mini-input" id="gdowntext" placeholder="下分数量" />
+						<span class="mui-btn-link">全下</span>
+						<span class="mui-pull-right">
+							<span class="mui-btn mui-btn-success mui-btn-mini" id="gdown">下分</span>
+						</span>
+					</a>
+				</li>
+			</ul>
+
+
+
+		</div>
+
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function() {
+				var groupid = plus.webview.currentWebview().groupId
+				var userId = plus.webview.currentWebview().userId
+				var meInfo = app.getUserGlobalInfo();
+				
+				mui.ajax(app.serverUrl + 'group/getMemberInfo?groupId=' + groupid+'&userId='+userId, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json',
+						'token': meInfo.token
+					},
+					success: function(data) {
+						console.log('getGroupInfo', JSON.stringify(data));
+						if (data.success) {
+							var result = data.data
+							var playInfo = result
+							if(playInfo){
+								mui('#avatar')[0].setAttribute('src',playInfo.avatar)
+								mui('#nickname')[0].innerText= playInfo.nickname
+								mui('#signature')[0].innerText= playInfo.signature
+								mui('#sex')[0].innerText= playInfo.sex =='2'?'男':playInfo.sex =='1'?'女':'未知'
+								mui('#userId')[0].innerText= playInfo.userId
+								mui('#score')[0].innerText= playInfo.score
+							}
+						} else {
+							app.showToast(data.msg, "error");
+						}
+					}
+				});
+				mui('#gup')[0].addEventListener("tap",function(){
+					mui.ajax(app.serverUrl + 'group/updateScore?groupId='+groupid+'&userId='+userId+'&type=1&score='+mui('#guptext')[0].value, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json',
+							'token': meInfo.token
+						},
+						success: function(data) {
+							console.log('getGroupInfo', JSON.stringify(data));
+							if (data.success) {
+								var result = data.data
+							mui.toast(data.msg)
+							} else {
+								app.showToast(data.msg, "error");
+							}
+						}
+					});
+				})
+				mui('#gdown')[0].addEventListener("tap",function(){
+					mui.ajax(app.serverUrl + 'group/updateScore?groupId='+groupid+'&userId='+userId+'&type=2&score='+mui('#gdowntext')[0].value, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json',
+							'token': meInfo.token
+						},
+						success: function(data) {
+							console.log('getGroupInfo', JSON.stringify(data));
+							if (data.success) {
+								var result = data.data
+							mui.toast(data.msg)
+							} else {
+								app.showToast(data.msg, "error");
+							}
+						}
+					});
+				})
+			});
+		</script>
+	</body>
+
+</html>

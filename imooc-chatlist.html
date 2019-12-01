@@ -132,6 +132,7 @@
 				// 为群搜索绑定点击事件
 				mui("#ul_friend_request_list").on("tap", ".chat-with-friend", function(e) {
 					var groupid = this.getAttribute("groupId");
+
 					mui.prompt('', '请输入邀请码', null, ['取消', '确认'], function(e) {
 						console.log('prompt', JSON.stringify(e))
 						if (e.index == '1') {
@@ -165,41 +166,51 @@
 					var groupId = this.getAttribute("groupId");
 					var groupName = this.getAttribute("groupName");
 					var friendFaceImage = this.getAttribute("friendFaceImage");
+					var self = this;
+					var expire = this.getAttribute("expire");
 					mgroupId = groupId
-					mui.prompt('', '请输入续费天数', null, ['取消', '确认'], function(e) {
-						console.log('prompt', JSON.stringify(e))
-						if (e.index == '1' && e.value) {
-							// 打开聊天子页面
-							mui.openWindow({
-								url: "chatting.html",
-								id: "chatting-" + groupId, // 每个朋友的聊天页面都是唯一对应的
-								extras: {
-									groupId: groupId,
-									groupName: groupName,
-									friendFaceImage: friendFaceImage
-								}
-							});
-							// 		var params = "group/joinGroup?groupId=" + groupid + "&invitationCode=" + e.value
-							// 		mui.ajax(app.serverUrl + params, {
-							// 			dataType: 'json', //服务器返回json格式数据
-							// 			type: 'post', //HTTP请求类型
-							// 			timeout: 10000, //超时时间设置为10秒；
-							// 			headers: {
-							// 				'Content-Type': 'application/json',
-							// 				'token': user.token
-							// 			},
-							// 			success: function(data) {
-							// 				if (data.success) {
-							// 					// 页面跳转
+					if (expire != "false") {
+						mui.prompt('', '请输入续费天数', null, ['取消', '确认'], function(e) {
+							console.log('prompt', JSON.stringify(e))
+							if (e.index == '1' && e.value) {
 
-							// 				} else {
-							// 					console.error(data.msg)
-							// 					app.showToast(data.msg, "error");
-							// 				}
-							// 			}
-							// 		});
-						}
-					}, 'div')
+
+								var params = "group/renew?groupId=" + groupId + "&day=" + e.value
+								mui.ajax(app.serverUrl + params, {
+									dataType: 'json', //服务器返回json格式数据
+									type: 'post', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									headers: {
+										'Content-Type': 'application/json',
+										'token': user.token
+									},
+									success: function(data) {
+										if (data.success) {
+											// 页面跳转
+											self.setAttribute("expire","false");
+											self.classList.remove('item-expire')
+										} else {
+											console.error(data.msg)
+											app.showToast(data.msg, "error");
+										}
+									}
+								});
+							}
+						}, 'div')
+					} else {
+						//打开聊天子页面fa
+						mui.openWindow({
+							url: "chatting.html",
+							id: "chatting-" + groupId, // 每个朋友的聊天页面都是唯一对应的
+							extras: {
+								groupId: groupId,
+								groupName: groupName,
+								friendFaceImage: friendFaceImage
+							}
+						});
+
+					}
+
 
 
 					// var me = app.getUserGlobalInfo();
@@ -259,7 +270,7 @@
 						CHAT.socket.send(msg);
 					} else {
 						// 重连websocket
-						// CHAT.init();
+						CHAT.init();
 						// setTimeout("CHAT.reChat('" + msg + "')", "1000");
 					}
 					// 渲染快照列表进行展示
@@ -326,11 +337,16 @@
 						var type = dataContent.data.type
 						if (chatWebview != null) {
 							var isMine = dataContent.data.userId == app.getUserGlobalInfo().id
-							var redEnvelope = JSON.stringify(dataContent.data.redEnvelope)
 							debugger
+							var redEnvelope = JSON.stringify(dataContent.data.redEnvelope)
 							if (isMine && type == '1') return;
-							chatWebview.evalJS("receiveMsg('" + msg + "','" + nickname + "','" + type + "','" + isMine + "','" +
-								redEnvelope + "')");
+							if (redEnvelope) {
+								chatWebview.evalJS("receiveMsg('" + msg + "','" + nickname + "','" + type + "','" + isMine + "','" +
+									redEnvelope + "')");
+							} else {
+								chatWebview.evalJS("receiveMsg('" + msg + "','" + nickname + "','" + type + "','" + isMine + "')");
+							} // 
+
 							chatWebview.evalJS("resizeScreen()");
 						} else {
 							isRead = false; // chatWebview 聊天页面没有打开，标记消息未读状态

@@ -41,6 +41,12 @@
 			.money {position: absolute;width:100px;height:100px;
 			bottom:10px;left:0;right:0;margin:0 auto;background: url('image/money.png') no-repeat center;background-size: contain;}
 			#detailbtn{display: none;}
+			.footer-content .mui-table-view-cell img{width: 40px;}
+			.footer-content .mui-table-view-cell .mui-media-body{margin-top: 0;}
+			.footer-content .mui-grid-view.mui-grid-9 .mui-table-view-cell>a:not(.mui-btn){padding:0}
+			.mui-grid-view.mui-grid-9{background-color: transparent;border:0!important}
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell{border:0!important}
+			.footer-center .mui-grid-view.mui-grid-9 .mui-table-view-cell{padding:2px 10px;}
 		</style>
 	</head>
 
@@ -55,8 +61,8 @@
 
 		<div id="msg-outter" class="mui-content">
 			<div id='msg'>
-
-<!-- 				<div class="friend_lists">
+<!-- 
+				<div class="friend_lists">
 					<div class="header_img">
 						<img src="image/face-default-cat.png" width="40px" height="40px" />
 					</div>
@@ -116,14 +122,71 @@
 		</div>
 
 		<footer>
-			<div class="footer-center">
-				<textarea id='msg-text' type="text" class='input-text'></textarea>
+			<div class="footer-bar">
+		<div class="footer-center">
+			<textarea id='msg-text' type="text" class='input-text'></textarea>
+		</div>
+		<label for="" class="footer-right">
+			<button type="button" class="mui-btn mui-btn-gray" id="send">发送</button>
+			<!-- <button type="button" class="mui-btn mui-btn-gray" id="sendrd">发红包</button> -->
+		</label>		
 			</div>
-			<label for="" class="footer-right">
-				<button type="button" class="mui-btn mui-btn-gray" id="send">发送</button>
-				<button type="button" class="mui-btn mui-btn-gray" id="sendrd">发红包</button>
-			</label>
+
+			<div class="footer-content">
+				<ul class="mui-table-view mui-grid-view mui-grid-9">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<!-- <span class="mui-icon mui-icon-home">
+								<img src="image/add_img.png" >
+							</span> -->
+							<img src="image/add_img.png" >
+							<div class="mui-media-body">选择图片</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<!-- <span class="mui-icon mui-icon-home">
+								<img src="image/add_img.png" >
+							</span> -->
+							<img src="image/explain2.png" >
+							<div class="mui-media-body">玩法说明</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<!-- <span class="mui-icon mui-icon-email"> -->
+								<!-- <span class="mui-badge mui-badge-red">5</span></span> -->							<img src="image/bill.png" >
+							<div class="mui-media-body">账单</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#" id="sendrd">
+							<!-- <span class="mui-icon mui-icon-chatbubble"></span> -->
+							<img src="image/add_red_pack.png" >
+							<div class="mui-media-body">红包</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<!-- <span class="mui-icon mui-icon-location"></span> -->
+							<img src="image/add_red_pack2.png" >
+							<div class="mui-media-body">发福利红包</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<!-- <span class="mui-icon mui-icon-search"></span> -->
+							<img src="image/person.png" >
+							<div class="mui-media-body">联系群主</div>
+						</a>
+					</li>
+					
+					</li>
+				</ul>
+			</div>
 		</footer>
+		
+
 
 		<script src="js/mui.min.js"></script>
 		<script type="application/javascript" src="js/app.js"></script>
@@ -145,35 +208,8 @@
 			mui.plusReady(function() {
 				plus.navigator.setStatusBarStyle("light");
 				plus.navigator.setStatusBarBackground("#0eac68");
-				document.getElementById('more').addEventListener("tap", function(e) {
-					console.log('more', e)
-					plus.nativeUI.actionSheet({
-						title: '群操作',
-						cancel: '取消',
-						buttons: buttons
-					}, function(e) {
-						console.log('more', e)
-						var data = {
-							id: '',
-							url: ''
-						}
-						if (e.index == 1) {
-							data = {
-								id: 'groupSetting.html',
-								url: 'groupSetting.html'
-							}
-						} else if (e.index == 2) {
-							data = {
-								id: 'groupMasterSetting.html',
-								url: 'groupMasterSetting.html'
-							}
-						}
-						mui.openWindow(data.id, data.url)
-					})
-					e.preventDefault()
-				})
 
-				// 获取我自己的用户信息					
+				// 获取我自己的用户信息
 				var me = app.getUserGlobalInfo();
 
 				// 获取聊天页面webview
@@ -182,11 +218,47 @@
 				chattingWebview.setStyle({
 					softinputMode: "adjustResize"
 				});
-				
+
 				// 获取上一个页面传入的好友属性值
 				friendUserId = chattingWebview.groupId;
 				friendNickname = chattingWebview.groupName;
 				friendFaceImage = chattingWebview.friendFaceImage;
+
+
+				document.getElementById('more').addEventListener("tap", function(e) {
+					console.log('more', e)
+					plus.nativeUI.actionSheet({
+						title: '群操作',
+						cancel: '取消',
+						buttons: buttons
+					}, function(e) {
+						console.log('more', e)
+						var data = {}
+						if (e.index == 1) {
+							data = {
+								url: "groupSetting.html",
+								id: "groupSetting.html",
+								extras: {
+									groupId: friendUserId
+								}
+							}
+						} else if (e.index == 2) {
+							data = {
+								url: "groupMasterSetting.html",
+								id: "groupMasterSetting.html",
+								extras: {
+									groupId: friendUserId
+								}
+							}
+						}
+						mui.openWindow(data)
+					})
+					e.preventDefault()
+				})
+
+
+
+				//group/getGroupInfo?groupId=121
 
 				// 标题改为朋友的昵称
 				document.getElementById("chatting-nickname").innerHTML = friendNickname;
@@ -202,7 +274,7 @@
 				// 获取dom控件
 				var msg_text = document.getElementById("msg-text");
 				var send = document.getElementById("send");
-
+				var isblur = false
 				// 监听用户输入，使得send按钮变色
 				msg_text.addEventListener("input", function() {
 					var msg_text_val = msg_text.value;
@@ -212,11 +284,25 @@
 						send.setAttribute("class", "mui-btn-gray");
 					}
 				});
-
+				msg_text.addEventListener("blur", function() {
+					isblur = true
+					
+				})
+				msg_text.addEventListener("focus", function() {
+					isblur = false
+					
+				})
 				// 对当前的窗口监听resize事件
 				window.addEventListener("resize", function() {
 					resizeScreen();
-					document.getElementById("msg-outter").style.paddingBottom = "50px";
+					if(isblur){
+						document.getElementById("msg-outter").removeAttribute("style") ;
+						document.getElementsByTagName('footer')[0].removeAttribute("style") 
+					}else{
+						
+					document.getElementById("msg-outter").style.paddingBottom = "250px";
+					document.getElementsByTagName('footer')[0].style.height  = "250px"
+					}
 				});
 				document.getElementById('moneybtn').addEventListener("tap", function() {
 
@@ -319,7 +405,7 @@
 					mui('#redstatus')[0].innerHTML = '恭喜发财，大吉大利'
 					mui('#detailbtn')[0].style.display = 'none'
 					mui('#moneybtn')[0].style.display = 'block'
-				
+
 				} else {
 					mui('#detailbtn')[0].style.display = 'block'
 					mui('#moneybtn')[0].style.display = 'none'
@@ -331,12 +417,12 @@
 						mui('#redstatus')[0].innerHTML = '红包已被抢完'
 					}
 				}
-				
+
 			}
-			
-			function GetRedPackage(dataContent){
+
+			function GetRedPackage(dataContent) {
 				rddata = dataContent
-				if(dataContent){
+				if (dataContent) {
 					mui("#popover").popover('toggle', document.getElementById("div"));
 					mui.openWindow({
 						url: "redPKdetail.html",
@@ -347,7 +433,7 @@
 						}
 					});
 				}
-				
+
 			}
 			// 接受消息
 			function receiveMsg(msg, nickname, type, isMine, redEnvelope) {

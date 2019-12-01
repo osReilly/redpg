@@ -108,10 +108,10 @@
 		<div class="mui-content groupsetting" id="groupsetting">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell mui-media">
-					<a href="javascript:;">
+					<!-- <a href="javascript:;"> -->
 						<div class="mui-media-body" style="line-height: 45px;" id="myheadwap">
 						</div>
-					</a>
+					<!-- </a> -->
 				</li>
 
 				<li class="mui-table-view-cell" id="morelist">
@@ -188,7 +188,6 @@
 			mui.plusReady(function() {
 				var groupid = plus.webview.currentWebview().groupId
 				var meInfo = app.getUserGlobalInfo();
-				debugger
 				mui.ajax(app.serverUrl + 'group/getGroupInfo?groupId=' + groupid, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'post', //HTTP请求类型
@@ -202,13 +201,15 @@
 						if (data.success) {
 							var result = data.data
 							var top4 = result.top4MemberList
-							
+
 							for (var i = 0; i < top4.length; i++) {
 								var item = top4[i].avatar
-								var ItemHtml = '<img class="mui-media-object mui-pull-left" src="' + item + '">'
+								var userId = top4[i].userId
+								
+								var ItemHtml = '<img userId="'+userId+'" class="mui-media-object mui-pull-left" src="' + item + '">'
 								mui('#myheadwap')[0].insertAdjacentHTML('beforeend', ItemHtml);
 							}
-							
+
 							mui('#morelist .mui-navigate-center')[0].innerText = '查看更多成员(' + top4.length + ')'
 							mui('#gname')[0].innerText = result.name
 							mui('#gid')[0].innerText = result.id
@@ -230,6 +231,20 @@
 					mui.toast('提交数据', phone.value + code.value)
 
 				});
+				mui('#myheadwap').on("tap",".mui-media-object",function(){
+					var userId = this.getAttribute("userId")
+					var playInfo = this.getAttribute("playInfo")
+					mui.openWindow({
+						//group/updateScore?groupId=121&userId=121&type=1&score=12
+						url: "updateScore.html",
+						id: "updateScore.html",
+						extras: {
+							groupId: groupid,
+							userId: userId,
+							playInfo:playInfo
+						}
+					});
+				})
 			});
 		</script>
 	</body>

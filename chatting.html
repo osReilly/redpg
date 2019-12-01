@@ -41,8 +41,11 @@
 			.money {position: absolute;width:100px;height:100px;
 			bottom:10px;left:0;right:0;margin:0 auto;background: url('image/money.png') no-repeat center;background-size: contain;}
 			#detailbtn{display: none;}
-			.footer-content .mui-table-view-cell img{width: 60px;}
+			.footer-content .mui-table-view-cell img{width: 40px;}
+			.footer-content .mui-table-view-cell .mui-media-body{margin-top: 0;}
 			.footer-content .mui-grid-view.mui-grid-9 .mui-table-view-cell>a:not(.mui-btn){padding:0}
+			.mui-grid-view.mui-grid-9{background-color: transparent;border:0!important}
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell{border:0!important}
 			.footer-center .mui-grid-view.mui-grid-9 .mui-table-view-cell{padding:2px 10px;}
 		</style>
 	</head>
@@ -58,7 +61,7 @@
 
 		<div id="msg-outter" class="mui-content">
 			<div id='msg'>
-
+<!-- 
 				<div class="friend_lists">
 					<div class="header_img">
 						<img src="image/face-default-cat.png" width="40px" height="40px" />
@@ -103,7 +106,7 @@
 						<div class="msg-right-name">名字</div>
 						<p class="msg-right-green">好的，没问题！时间地点？</p>
 					</div>
-				</div>
+				</div> -->
 
 			</div>
 			<div id="popover" class="redpackgePopver mui-popover" style="height: 350px;">
@@ -419,6 +422,7 @@
 
 			function GetRedPackage(dataContent) {
 				rddata = dataContent
+				debugger
 				if (dataContent) {
 					mui("#popover").popover('toggle', document.getElementById("div"));
 					mui.openWindow({
