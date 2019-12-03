@@ -61,7 +61,7 @@
 
 		<div id="msg-outter" class="mui-content">
 			<div id='msg'>
-<!-- 
+				<!-- 
 				<div class="friend_lists">
 					<div class="header_img">
 						<img src="image/face-default-cat.png" width="40px" height="40px" />
@@ -123,13 +123,15 @@
 
 		<footer>
 			<div class="footer-bar">
-		<div class="footer-center">
-			<textarea id='msg-text' type="text" class='input-text'></textarea>
-		</div>
-		<label for="" class="footer-right">
-			<button type="button" class="mui-btn mui-btn-gray" id="send">发送</button>
-			<!-- <button type="button" class="mui-btn mui-btn-gray" id="sendrd">发红包</button> -->
-		</label>		
+				<div class="footer-center">
+					<textarea id='msg-text' type="text" class='input-text'></textarea>
+				</div>
+				<label for="" class="footer-right">
+
+					<button type="button" class="mui-btn mui-btn-gray" id="send" style="display: none;">发送</button>
+					<button type="button" class="mui-icon mui-icon-plus mui-btn-link" id="open" style="color:#000000;"></button>
+					<!-- <button type="button" class="mui-btn mui-btn-gray" id="sendrd">发红包</button> -->
+				</label>
 			</div>
 
 			<div class="footer-content">
@@ -139,7 +141,7 @@
 							<!-- <span class="mui-icon mui-icon-home">
 								<img src="image/add_img.png" >
 							</span> -->
-							<img src="image/add_img.png" >
+							<img src="image/add_img.png">
 							<div class="mui-media-body">选择图片</div>
 						</a>
 					</li>
@@ -148,44 +150,44 @@
 							<!-- <span class="mui-icon mui-icon-home">
 								<img src="image/add_img.png" >
 							</span> -->
-							<img src="image/explain2.png" >
+							<img src="image/explain2.png">
 							<div class="mui-media-body">玩法说明</div>
 						</a>
 					</li>
 					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
 						<a href="#">
 							<!-- <span class="mui-icon mui-icon-email"> -->
-								<!-- <span class="mui-badge mui-badge-red">5</span></span> -->							<img src="image/bill.png" >
+							<!-- <span class="mui-badge mui-badge-red">5</span></span> --> <img src="image/bill.png">
 							<div class="mui-media-body">账单</div>
 						</a>
 					</li>
 					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
 						<a href="#" id="sendrd">
 							<!-- <span class="mui-icon mui-icon-chatbubble"></span> -->
-							<img src="image/add_red_pack.png" >
+							<img src="image/add_red_pack.png">
 							<div class="mui-media-body">红包</div>
 						</a>
 					</li>
 					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
 						<a href="#">
 							<!-- <span class="mui-icon mui-icon-location"></span> -->
-							<img src="image/add_red_pack2.png" >
+							<img src="image/add_red_pack2.png">
 							<div class="mui-media-body">发福利红包</div>
 						</a>
 					</li>
 					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
 						<a href="#">
 							<!-- <span class="mui-icon mui-icon-search"></span> -->
-							<img src="image/person.png" >
+							<img src="image/person.png">
 							<div class="mui-media-body">联系群主</div>
 						</a>
 					</li>
-					
+
 					</li>
 				</ul>
 			</div>
 		</footer>
-		
+
 
 
 		<script src="js/mui.min.js"></script>
@@ -274,34 +276,52 @@
 				// 获取dom控件
 				var msg_text = document.getElementById("msg-text");
 				var send = document.getElementById("send");
+				var add = document.getElementById("open");
 				var isblur = false
 				// 监听用户输入，使得send按钮变色
 				msg_text.addEventListener("input", function() {
 					var msg_text_val = msg_text.value;
 					if (msg_text_val.length > 0) {
+						send.style.display = 'block'
+						add.style.display = 'none'
 						send.setAttribute("class", "mui-btn-green");
 					} else {
+						send.style.display = 'none'
+						add.style.display = 'block'
 						send.setAttribute("class", "mui-btn-gray");
 					}
 				});
 				msg_text.addEventListener("blur", function() {
 					isblur = true
-					
+					var msg_text_val = msg_text.value;
+					if (msg_text_val.length > 0) {
+						send.style.display = 'block'
+						add.style.display = 'none'
+						send.setAttribute("class", "mui-btn-green");
+					} else {
+						send.style.display = 'none'
+						add.style.display = 'block'
+						send.setAttribute("class", "mui-btn-gray");
+					}
+				})
+				add.addEventListener("tap", function() {
+					isblur = true
+
 				})
 				msg_text.addEventListener("focus", function() {
 					isblur = false
-					
+
 				})
 				// 对当前的窗口监听resize事件
 				window.addEventListener("resize", function() {
 					resizeScreen();
-					if(isblur){
-						document.getElementById("msg-outter").removeAttribute("style") ;
-						document.getElementsByTagName('footer')[0].removeAttribute("style") 
-					}else{
-						
-					document.getElementById("msg-outter").style.paddingBottom = "250px";
-					document.getElementsByTagName('footer')[0].style.height  = "250px"
+					if (isblur) {
+						document.getElementById("msg-outter").removeAttribute("style");
+						document.getElementsByTagName('footer')[0].removeAttribute("style")
+					} else {
+
+						document.getElementById("msg-outter").style.paddingBottom = "250px";
+						document.getElementsByTagName('footer')[0].style.height = "250px"
 					}
 				});
 				document.getElementById('moneybtn').addEventListener("tap", function() {

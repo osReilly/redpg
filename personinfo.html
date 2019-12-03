@@ -57,8 +57,8 @@
 			}
 
 			.item-input {
-				width:100px;
-				border:0;
+				width: 100px;
+				border: 0;
 				-webkit-appearance: text;
 				text-align: right;
 				color: #666
@@ -109,108 +109,147 @@
 		<script type="text/javascript">
 			function refreshUserInfo() {
 				var user = app.getUserGlobalInfo();
-				console.warn('refreshUserInfo:',JSON.stringify(user))
-				
+				console.warn('refreshUserInfo:', JSON.stringify(user))
+
 				if (user != null) {
 					var faceImage = user.avatar;
 					var nickname = user.nickname;
 					var username = user.username;
 					var signature = user.signature;
-					var sex = user.sex ===1 ?'男':'女'
+					var sex = user.sex === 1 ? '男' : '女'
 					var span_nickname = document.getElementById("span_nickname");
 					var span_username = document.getElementById("span_username");
-					var span_signature =  document.getElementById("span_signature");
-					var span_sex =  document.getElementById("span_sex");
-					span_nickname.innerHTML = nickname;
+					var span_signature = document.getElementById("span_signature");
+					var span_sex = document.getElementById("span_sex");
+					span_nickname.value = nickname;
+					debugger
 					span_username.innerHTML = username;
 					span_signature.innerHTML = signature
 					span_sex.innerHTML = sex
 					if (app.isNotNull(faceImage)) {
 						var img_my_face = document.getElementById("myhead");
-						img_my_face.src =faceImage;
+						img_my_face.src = faceImage;
 					}
 				}
-				
+
 			}
-			
+
 			mui.init()
 			mui.plusReady(function() {
 				// 添加自定义事件，刷新头像
-				window.addEventListener("refreshUser", function(){
+				window.addEventListener("refreshUser", function() {
 					refreshUserInfo();
 				});
-				
+
 				var user = app.getUserGlobalInfo();
 				refreshUserInfo()
-			
-			document.getElementById("sexbtn").addEventListener("tap", function() {
-				plus.nativeUI.actionSheet({title:'性别',cancel:'取消',buttons:[{title:'男'},{title:'女'}]}, function(e){
-					mui.ajax(app.serverUrl+'user/update',{
-						data:{
-							sex:e.index
+				span_nickname.addEventListener("blur", function(e) {
+					console.log(e)
+					var value = this.value
+					mui.ajax(app.serverUrl + 'user/update', {
+						data: {
+							nickname: value
 						},
-						dataType:'json',//服务器返回json格式数据
-						type:'post',//HTTP请求类型
-						timeout:10000,//超时时间设置为10秒；
-						headers:{'Content-Type':'application/json','token':user.token},	              
-						success:function(data){
-							console.log(JSON.stringify(data));
-							if (data.success) {
-								 mui.toast(data.msg)
-								sexbtn.children[0].innerHTML = e.index === 1 ?'男':'女';
-								// 登录或者注册成功之后，保存全局用户对象到本地缓存
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json',
+							'token': user.token
+						},
+						success: function(data) {
+							if(data.success){
 								var userInfoJson = data.data;
 								app.setUserGlobalInfo(userInfoJson);
-								// 触发另外一个webview的自定义事件，可以使用 mui.fire()
-								var imooc_meWebview = plus.webview.getWebviewById("imooc-me.html");
-								mui.fire(imooc_meWebview, "refresh");
-								
-								// 页面跳转
-								// mui.back();
-								
-							} else {
-								app.showToast(data.msg, "error");
+								debugger
 							}
+							mui.toast(data.msg)
 						}
-					});
-					
+					})
 				})
-			})
-			document.getElementById("siginbtn").addEventListener("tap", function() {
-				mui.openWindow("signname.html", "signname.html");
-			})
-			document.getElementById("myhead").addEventListener("tap",function(){
-					 plus.gallery.pick( function(path){
-							console.log(path);
-							var oldpath = myhead.getAttribute('src')
-							if(path) myhead.setAttribute('src', path);
-							mui.ajax(app.serverUrl+'user/uploadAvatar',{
-								data:{
-									image:path
-								},
-								dataType:'json',//服务器返回json格式数据
-								type:'post',//HTTP请求类型
-								timeout:10000,//超时时间设置为10秒；
-								headers:{'Content-Type':'application/json','token':user.token},	              
-								success:function(data){
-									console.log(JSON.stringify(data));
-									if (data.success) {
-										 mui.toast(data.msg)
-										if(path) myhead.setAttribute('src', path);
-									} else {
-										myhead.setAttribute('src',oldpath)
-										app.showToast(data.msg, "error");
-									}
-								}
-							});
-							
-						}, function ( e ) {
-							console.log( "取消选择图片" );
-						}, {filter:"image"} );
-				})
-				
-			});
+				document.getElementById("sexbtn").addEventListener("tap", function() {
+					plus.nativeUI.actionSheet({
+						title: '性别',
+						cancel: '取消',
+						buttons: [{
+							title: '男'
+						}, {
+							title: '女'
+						}]
+					}, function(e) {
+						mui.ajax(app.serverUrl + 'user/update', {
+							data: {
+								sex: e.index
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json',
+								'token': user.token
+							},
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								if (data.success) {
+									mui.toast(data.msg)
+									sexbtn.children[0].innerHTML = e.index === 1 ? '男' : '女';
+									// 登录或者注册成功之后，保存全局用户对象到本地缓存
+									var userInfoJson = data.data;
+									app.setUserGlobalInfo(userInfoJson);
+									// 触发另外一个webview的自定义事件，可以使用 mui.fire()
+									var imooc_meWebview = plus.webview.getWebviewById("imooc-me.html");
+									mui.fire(imooc_meWebview, "refresh");
 
+									// 页面跳转
+									// mui.back();
+
+								} else {
+									app.showToast(data.msg, "error");
+								}
+							}
+						});
+
+					})
+				})
+				document.getElementById("siginbtn").addEventListener("tap", function() {
+					mui.openWindow("signname.html", "signname.html");
+				})
+				document.getElementById("myhead").addEventListener("tap", function() {
+					plus.gallery.pick(function(path) {
+						console.log(path);
+						var oldpath = myhead.getAttribute('src')
+						if (path) myhead.setAttribute('src', path);
+						mui.ajax(app.serverUrl + 'user/uploadAvatar', {
+							data: {
+								image: path
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json',
+								'token': user.token
+							},
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								if (data.success) {
+									mui.toast(data.msg)
+									if (path) myhead.setAttribute('src', path);
+								} else {
+									myhead.setAttribute('src', oldpath)
+									app.showToast(data.msg, "error");
+								}
+							}
+						});
+
+					}, function(e) {
+						console.log("取消选择图片");
+					}, {
+						filter: "image"
+					});
+				})
+
+			});
 		</script>
 	</body>
 
